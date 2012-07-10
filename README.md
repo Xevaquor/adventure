@@ -1,4 +1,0 @@
-adventure
-=========
-
-WSoC Game
