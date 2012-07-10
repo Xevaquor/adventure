@@ -1,0 +1,49 @@
+﻿+-------------------------------+
+|Developer's Adventure - koncept|
++-------------------------------+
+|  Ostatnio modyfikowany: 10-7  |
++-------------------------------+
+
+Gra pisana na Warsztat Summer of Code 2012 - zapewnie nic z tego nie wyniknie tak jak co roku ale tak jak co roku spróbuję po raz n-ty.
+
+//Wszelkie podobieństwo do Warsztat Game niezamierzone i całkowicie przypadkowe.
+
+Hack'n'slash w którym wcielamy się w młodego programistę ktory musi stawić czoła wielu  niebezpieczeństwom aby wygrać. Gracz niszczy potwory strzelając w nie bliżej nieokreślonymi pociskami (no bo czym ma strzelać? pudełkami po pizzy i kubkami po kawie?). Gra podzielona na niezależne poziomy. W nagrodę za kolejne sukcesy gracz dostaje bonusy dające mu większą moc niesienia pożogi, ale i przeciwnicy są coraz trudniejsi (ciekawe kto to zbalansuje?). Widok 2D z góry.
+
+Gracz:
+	Do wyboru dwie/trzy klasy postaci: programista C++, Java i może Assembly (można by i więcej ale muszą się jakoś sensownie różnić). Przykładowe różnice:
+	-> Java - wolny i słaby w ataku ale odporny na ciosy
+	-> Asm - szybki i z wielką mocą ale podatny na ciosy
+	-> C++ - coś po środku (żeby się tylko nie okazało że jedyna grywalna postać)
+	
+	Gracz wali jakimiś pociskami (dla Javy te kubki z kawą to by nawet pasowały), każda klasa ma inny kolorek i inną moc. Po zdobyciu iluś punktów (albo lepiej EXP - lepiej to wygląda) gracz zdobywa dodatkowe moce.
+	
+Moce:
+	//DRZEWKO Z MOCAMI!!!
+	(przykładowe wszystko)
+	Wątki - można walić więcej niż jeden pocisk na raz
+	Sieci - rażenie kilku wrogów na raz
+	Asercje(debugger) - leczenie/regeneracja HP
+	Unit testy - ochrona przed słabymi przeciwnikami (od buga w dół)
+	
+Przeciwnicy:
+	N00by - małe, niegroźne. Jednynie co to upierdliwe.
+	Trolle - Trochę groźniejsza wersja
+	Anoni - mocniejsza wersja powyższych.
+	Bugi - silny przeciwnik (it's not bug - it's feature <- fajnie by to jakoś wykorzystać)
+	Memleaki - potężniejsza wersja bugów
+	Project Manager - największe zuo, bardzo groźni ale nieliczni
+	Przeciwnicy pojawiają się na mapie w losowych miejscach na starcie + spawnują się żeby zniechęcić do bierności.
+	
+Poziomy:
+	Każdy level ma nazwę w postaci błędu np:
+		stack overflow
+		unresolved external symbol
+		access violation
+	Generowane proceduralnie - na pewno nie będzie mi się chciało pisać edytora
+	Im późniejszy level tym trudniejszy (proporcje i ilość wrogów)
+	
+Inne uwagi:
+	Wplecenie komiksów xkcd między poziomy
+	
+I tak się na 90% nie uda ale cóż.
