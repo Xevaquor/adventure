@@ -18,8 +18,15 @@ namespace dev_adventure
     {
         public const int FRAMES_PER_SECOND = 25;
 
+        private Vector2 desiredResolution = new Vector2(1280, 720);
+        private Vector2 realResolution = Vector2.Zero;
+        private Matrix projectionMatrix = Matrix.Identity;
+        private Viewport gameViewport = new Viewport();
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public DevAdventure()
         {
@@ -28,6 +35,8 @@ namespace dev_adventure
 
             this.IsFixedTimeStep = true;
             this.TargetElapsedTime = TimeSpan.FromMilliseconds(1000 / FRAMES_PER_SECOND);
+
+            SetGraphicMode();
         }
 
         /// <summary>
@@ -38,24 +47,53 @@ namespace dev_adventure
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
 
             base.Initialize();
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
+        private void SetGraphicMode()
+        {
+            bool fulscreen = false;   
+            string[] args = Environment.GetCommandLineArgs();            
+            try
+            {
+                realResolution.X = int.Parse(args[1]);
+                realResolution.Y = int.Parse(args[2]);
+                fulscreen = bool.Parse(args[3]);
+            }
+            catch (Exception ex)
+            {
+                logger.Warn("Invalid arguments given. Setting to default.", realResolution.X, realResolution.Y, fulscreen);
+                realResolution.X = 1024;
+                realResolution.Y = 768;
+                fulscreen = false;
+            }
+
+            graphics.PreferredBackBufferWidth = (int) realResolution.X;
+            graphics.PreferredBackBufferHeight = (int) realResolution.Y;
+            graphics.IsFullScreen = fulscreen;
+            graphics.ApplyChanges();
+
+            Window.Title = string.Format("{0}x{1}", realResolution.X, realResolution.Y);
+
+            float scale = realResolution.X / desiredResolution.X;
+            float aspect = desiredResolution.X / desiredResolution.Y;
+            float final_y = realResolution.X / aspect;
+
+            int margin = (int)(Math.Abs(realResolution.Y - final_y) / 2);
+            gameViewport = new Viewport(0, margin, (int)realResolution.X, (int)final_y);
+
+            projectionMatrix = Matrix.CreateScale(scale, scale, 1);
+            
+        }
+
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             FloatText.Create(spriteBatch, Content.Load<SpriteFont>("default"));
+            
+            bg = Content.Load<Texture2D>("bg");
 
-            FloatText.Add("Powered by Steam", new Vector2(400, 400), Color.Red);
-
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>
@@ -64,46 +102,29 @@ namespace dev_adventure
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+
         }
 
         Random rnd = new Random();
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-
-            float delta = gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
-
-            int q = rnd.Next(15);
-            if (q == 0)
-            {
-                int x = rnd.Next(100,400);
-                int y = rnd.Next(400,400);
-
-                FloatText.Add("YAMAHA", new Vector2(x, y), Color.Red);
-            }
-
-            FloatText.UpdateAll(delta);
+            FloatText.UpdateAll();
 
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        Texture2D bg;
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Honeydew);
-            spriteBatch.Begin();
+            Viewport full_view = new Viewport(0,0, (int)realResolution.X, (int)realResolution.Y);
+            GraphicsDevice.Viewport = full_view;
+            GraphicsDevice.Clear(Color.Gray);
+            GraphicsDevice.Viewport = gameViewport;
+
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, projectionMatrix);
+
+            spriteBatch.Draw(bg, new Vector2(0, 0), Color.White);
 
             FloatText.DrawAll();
 

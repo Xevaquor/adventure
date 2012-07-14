@@ -35,14 +35,15 @@ namespace dev_adventure
             velocity = new Vector2(0, -1);
             collection = new LinkedList<FloatText>();
         }
-        public static void UpdateAll(float deltaTime)
+        public static void UpdateAll()
         {
             LinkedListNode<FloatText> node = collection.First;
             while (node != null)
             {
+                var next = node.Next;
                 if (!node.Value.Update())
                     collection.Remove(node);
-                node = node.Next;
+                node = next;
             }
         }
         public static void DrawAll()
