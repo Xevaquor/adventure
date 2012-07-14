@@ -17,13 +17,10 @@ namespace dev_adventure
     {
         private static SpriteBatch spriteBatch = null;
         private static SpriteFont font = null;
-        private static Vector2 velocity = Vector2.Zero;             //px/sec
+        private static Vector2 velocity = Vector2.Zero;             
         private static LinkedList<FloatText> collection = null;
 
-        private static float delta = 0;
-
-        private const float FADE_SPEED = 1.1f;
-        private const float TIME_TO_LIVE = 1.1f;
+        private const float TIME_TO_LIVE = DevAdventure.FRAMES_PER_SECOND;
 
 
         private string message;
@@ -35,12 +32,11 @@ namespace dev_adventure
         {
             spriteBatch = batch;
             font = spriteFont;
-            velocity = new Vector2(0, -120);
+            velocity = new Vector2(0, -1);
             collection = new LinkedList<FloatText>();
         }
         public static void UpdateAll(float deltaTime)
         {
-            delta = deltaTime;
             LinkedListNode<FloatText> node = collection.First;
             while (node != null)
             {
@@ -70,22 +66,11 @@ namespace dev_adventure
         /// <returns>False if dead, true if alive</returns>
         public bool Update()
         {
-            livingTime += delta;
-            if (livingTime > TIME_TO_LIVE)
+            if (livingTime++ >= TIME_TO_LIVE)
                 return false;
-            position += velocity * delta;
-            checked
-            {
-                try
-                {
-                    color.A -= (byte)(delta * FADE_SPEED * 255);
-                }
-                catch (OverflowException ex)
-                {
-                    color.A = 0;
-                }                
-            }
-
+            position += velocity;
+                    color.A -= (byte)(10);
+                
             return true;
         }
 

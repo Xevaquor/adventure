@@ -16,6 +16,8 @@ namespace dev_adventure
     /// </summary>
     public class DevAdventure : Microsoft.Xna.Framework.Game
     {
+        public const int FRAMES_PER_SECOND = 25;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -23,6 +25,9 @@ namespace dev_adventure
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            this.IsFixedTimeStep = true;
+            this.TargetElapsedTime = TimeSpan.FromMilliseconds(1000 / FRAMES_PER_SECOND);
         }
 
         /// <summary>
@@ -80,8 +85,8 @@ namespace dev_adventure
             int q = rnd.Next(15);
             if (q == 0)
             {
-                int x = rnd.Next(640);
-                int y = rnd.Next(480);
+                int x = rnd.Next(100,400);
+                int y = rnd.Next(400,400);
 
                 FloatText.Add("YAMAHA", new Vector2(x, y), Color.Red);
             }
