@@ -16,7 +16,8 @@ namespace dev_adventure
     /// </summary>
     public class DevAdventure : Microsoft.Xna.Framework.Game
     {
-        public const int FRAMES_PER_SECOND = 25;
+        private static int frames_per_second = 30;
+        public static int FRAMES_PER_SECOND { get { return frames_per_second; } }
 
         private Vector2 desiredResolution = new Vector2(1280, 720);
         private Vector2 realResolution = Vector2.Zero;
@@ -57,9 +58,10 @@ namespace dev_adventure
             string[] args = Environment.GetCommandLineArgs();            
             try
             {
-                realResolution.X = int.Parse(args[1]);
-                realResolution.Y = int.Parse(args[2]);
-                fulscreen = bool.Parse(args[3]);
+                frames_per_second = int.Parse(args[1]);
+                realResolution.X = int.Parse(args[2]);
+                realResolution.Y = int.Parse(args[3]);
+                fulscreen = bool.Parse(args[4]);
             }
             catch (Exception ex)
             {
@@ -67,6 +69,7 @@ namespace dev_adventure
                 realResolution.X = 1024;
                 realResolution.Y = 768;
                 fulscreen = false;
+                frames_per_second = 30;
             }
 
             graphics.PreferredBackBufferWidth = (int) realResolution.X;
@@ -74,7 +77,7 @@ namespace dev_adventure
             graphics.IsFullScreen = fulscreen;
             graphics.ApplyChanges();
 
-            Window.Title = string.Format("{0}x{1}", realResolution.X, realResolution.Y);
+            Window.Title = string.Format("{0}x{1}x{2}", realResolution.X, realResolution.Y, FRAMES_PER_SECOND);
 
             float scale = realResolution.X / desiredResolution.X;
             float aspect = desiredResolution.X / desiredResolution.Y;
@@ -84,6 +87,8 @@ namespace dev_adventure
             gameViewport = new Viewport(0, margin, (int)realResolution.X, (int)final_y);
 
             projectionMatrix = Matrix.CreateScale(scale, scale, 1);
+
+            logger.Info("Created window {0}x{1} with {2} frames per second, windowed: {3}", realResolution.X, realResolution.Y, FRAMES_PER_SECOND, !fulscreen);
             
         }
 
@@ -91,9 +96,10 @@ namespace dev_adventure
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             FloatText.Create(spriteBatch, Content.Load<SpriteFont>("default"));
-            
-            bg = Content.Load<Texture2D>("bg");
 
+            bg = Content.Load<Texture2D>("bg");
+            a_s = new AnimatedSprite(Content.Load<Texture2D>("anim"), 5, 1, "lower", "upper", "greek", "num");
+            a_s.SetAnim("greek");
         }
 
         /// <summary>
@@ -109,15 +115,20 @@ namespace dev_adventure
 
         protected override void Update(GameTime gameTime)
         {
+            if (rnd.Next(20) == 0)
+                FloatText.Add("Centryfuga", new Vector2(400, 400), Color.Purple);
+
             FloatText.UpdateAll();
+            a_s.Update();
 
             base.Update(gameTime);
         }
 
         Texture2D bg;
+        AnimatedSprite a_s;
         protected override void Draw(GameTime gameTime)
         {
-            Viewport full_view = new Viewport(0,0, (int)realResolution.X, (int)realResolution.Y);
+            Viewport full_view = new Viewport(0, 0, (int)realResolution.X, (int)realResolution.Y);
             GraphicsDevice.Viewport = full_view;
             GraphicsDevice.Clear(Color.Gray);
             GraphicsDevice.Viewport = gameViewport;
@@ -125,6 +136,7 @@ namespace dev_adventure
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, projectionMatrix);
 
             spriteBatch.Draw(bg, new Vector2(0, 0), Color.White);
+            spriteBatch.Draw(a_s.Sprite, Vector2.Zero, a_s.Area, Color.White);
 
             FloatText.DrawAll();
 
