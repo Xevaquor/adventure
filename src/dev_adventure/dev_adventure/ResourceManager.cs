@@ -64,9 +64,11 @@ namespace dev_adventure
             logger.Info("Loaded  {0}: {1}",typeof(T).Name,  name);
         }
 
-        public static bool ContentLoaded(IEnumerable<string> demand)
+        public static bool ContentLoaded(IEnumerable<ResMan.Asset> demand)
         {
-            var intersecion = demand.Intersect(assets.Keys);
+            var names = from x in demand select x.Name;
+
+            var intersecion = names.Intersect(assets.Keys);
             return intersecion.Count() == demand.Count();
         }
     }

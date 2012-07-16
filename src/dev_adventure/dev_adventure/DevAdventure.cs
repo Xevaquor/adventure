@@ -103,6 +103,7 @@ namespace dev_adventure
             gameStates = new Dictionary<string, IGameState>();
             gameStates.Add("loading", new LoadingGameState());
             gameStates.Add("menu", new MenuGameState());
+            gameStates.Add("pause", new PauseGameState());
 
             foreach (var state in gameStates)
             {
@@ -111,7 +112,7 @@ namespace dev_adventure
             }
 
             currentState = "menu";
-            gameStates[currentState].Activate(false, null);
+            gameStates[currentState].Activate(null);
 
         }
 
@@ -119,7 +120,7 @@ namespace dev_adventure
         {
             previousState = currentState;
             currentState = "loading";
-            gameStates[currentState].Activate(false, assets);
+            gameStates[currentState].Activate(assets);
 
             this.SuppressDraw();
         }
@@ -131,13 +132,13 @@ namespace dev_adventure
                 string tmp = currentState;
                 currentState = previousState;
                 previousState = tmp;
-                gameStates[currentState].Activate(true, null);
+                gameStates[currentState].Activate(null);
             }
             else
             {
                 previousState = currentState;
                 currentState = requested_state;
-                gameStates[currentState].Activate(false, null);
+                gameStates[currentState].Activate(null);
             }
 
             this.SuppressDraw();

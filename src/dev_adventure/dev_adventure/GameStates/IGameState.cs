@@ -20,7 +20,7 @@ namespace dev_adventure
     {
         void Draw(SpriteBatch batch);
         void Update();
-        void Activate(bool contentLoaded, object obj);
+        void Activate(object obj);
 
         event RequestStateChangeDelegate StateChangeRequested;
         event RequestContent ContentRequested;

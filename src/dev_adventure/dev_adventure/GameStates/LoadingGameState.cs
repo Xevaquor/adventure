@@ -44,8 +44,9 @@ namespace dev_adventure
 
         }
 
-        public void Activate(bool contentLoaded,object request)
+        public void Activate(object request)
         {
+            //TODO check if has requred content else - error
             if (request == null)
             {
                 return;
