@@ -24,6 +24,9 @@ namespace dev_adventure
         private Matrix projectionMatrix = Matrix.Identity;
         private Viewport gameViewport = new Viewport();
 
+        private Dictionary<string, IGameState> gameStates = null;
+        private string currentState, previousState;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -48,7 +51,7 @@ namespace dev_adventure
         /// </summary>
         protected override void Initialize()
         {
-
+            ResMan.Create(Content);
             base.Initialize();
         }
 
@@ -95,11 +98,57 @@ namespace dev_adventure
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            FloatText.Create(spriteBatch, Content.Load<SpriteFont>("default"));
 
-            bg = Content.Load<Texture2D>("bg");
-            a_s = new AnimatedSprite(Content.Load<Texture2D>("anim"), 5, 1, "lower", "upper", "greek", "num");
-            a_s.SetAnim("greek");
+            ResMan.LoadDefaultContent();
+            gameStates = new Dictionary<string, IGameState>();
+            gameStates.Add("loading", new LoadingGameState());
+            gameStates.Add("menu", new MenuGameState());
+
+            foreach (var state in gameStates)
+            {
+                state.Value.StateChangeRequested += new RequestStateChangeDelegate(Value_StateChangeRequested);
+                state.Value.ContentRequested += new RequestContent(Value_ContentRequested);
+            }
+
+            currentState = "menu";
+            gameStates[currentState].Activate(false, null);
+
+        }
+
+        void Value_ContentRequested(IGameState sender, IEnumerable<ResMan.Asset> assets)
+        {
+            previousState = currentState;
+            currentState = "loading";
+            gameStates[currentState].Activate(false, assets);
+
+            this.SuppressDraw();
+        }
+
+        void Value_StateChangeRequested(IGameState sender, string requested_state)
+        {
+            if (requested_state == null)
+            {
+                string tmp = currentState;
+                currentState = previousState;
+                previousState = tmp;
+                gameStates[currentState].Activate(true, null);
+            }
+            else
+            {
+                previousState = currentState;
+                currentState = requested_state;
+                gameStates[currentState].Activate(false, null);
+            }
+
+            this.SuppressDraw();
+
+        }
+
+
+        void DevAdventure_StateChangeRequested(string requested_state)
+        {
+            currentState = requested_state;
+            this.SuppressDraw();
         }
 
         /// <summary>
@@ -115,11 +164,13 @@ namespace dev_adventure
 
         protected override void Update(GameTime gameTime)
         {
-            if (rnd.Next(20) == 0)
+           /* if (rnd.Next(20) == 0)
                 FloatText.Add("Centryfuga", new Vector2(400, 400), Color.Purple);
 
             FloatText.UpdateAll();
-            a_s.Update();
+            a_s.Update();*/
+
+            gameStates[currentState].Update();
 
             base.Update(gameTime);
         }
@@ -135,10 +186,11 @@ namespace dev_adventure
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, projectionMatrix);
 
-            spriteBatch.Draw(bg, new Vector2(0, 0), Color.White);
-            spriteBatch.Draw(a_s.Sprite, Vector2.Zero, a_s.Area, Color.White);
+            gameStates[currentState].Draw(spriteBatch);
+           /* spriteBatch.Draw(bg, new Vector2(0, 0), Color.White);
+            spriteBatch.Draw(a_s.Sprite, Vector2.Zero, a_s.Area, Color.White);*/
 
-            FloatText.DrawAll();
+            
 
             spriteBatch.End();
             base.Draw(gameTime);

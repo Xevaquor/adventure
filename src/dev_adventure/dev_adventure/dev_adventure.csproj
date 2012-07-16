@@ -110,9 +110,13 @@
   <ItemGroup>
     <Compile Include="AnimatedSprite.cs" />
     <Compile Include="FloatText.cs" />
+    <Compile Include="GameStates\IGameState.cs" />
+    <Compile Include="GameStates\LoadingGameState.cs" />
+    <Compile Include="GameStates\PauseGameState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="DevAdventure.cs" />
+    <Compile Include="ResourceManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
