@@ -24,7 +24,7 @@ namespace dev_adventure
         private Matrix projectionMatrix = Matrix.Identity;
         private Viewport gameViewport = new Viewport();
 
-        private Dictionary<string, IGameState> gameStates = null;
+        private Dictionary<string, GameState> gameStates = null;
         private string currentState, previousState;
 
         GraphicsDeviceManager graphics;
@@ -100,7 +100,7 @@ namespace dev_adventure
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             ResMan.LoadDefaultContent();
-            gameStates = new Dictionary<string, IGameState>();
+            gameStates = new Dictionary<string, GameState>();
             gameStates.Add("loading", new LoadingGameState());
             gameStates.Add("menu", new MenuGameState());
             gameStates.Add("pause", new PauseGameState());
@@ -116,7 +116,7 @@ namespace dev_adventure
 
         }
 
-        void Value_ContentRequested(IGameState sender, IEnumerable<ResMan.Asset> assets)
+        void Value_ContentRequested(GameState sender, IEnumerable<ResMan.Asset> assets)
         {
             previousState = currentState;
             currentState = "loading";
@@ -125,7 +125,7 @@ namespace dev_adventure
             this.SuppressDraw();
         }
 
-        void Value_StateChangeRequested(IGameState sender, string requested_state)
+        void Value_StateChangeRequested(GameState sender, string requested_state)
         {
             if (requested_state == null)
             {
@@ -140,9 +140,10 @@ namespace dev_adventure
                 currentState = requested_state;
                 gameStates[currentState].Activate(null);
             }
+            logger.Info("State changed to {0}", currentState);
 
             this.SuppressDraw();
-
+            
         }
 
 
@@ -165,19 +166,12 @@ namespace dev_adventure
 
         protected override void Update(GameTime gameTime)
         {
-           /* if (rnd.Next(20) == 0)
-                FloatText.Add("Centryfuga", new Vector2(400, 400), Color.Purple);
-
-            FloatText.UpdateAll();
-            a_s.Update();*/
 
             gameStates[currentState].Update();
 
             base.Update(gameTime);
         }
 
-        Texture2D bg;
-        AnimatedSprite a_s;
         protected override void Draw(GameTime gameTime)
         {
             Viewport full_view = new Viewport(0, 0, (int)realResolution.X, (int)realResolution.Y);
@@ -187,11 +181,7 @@ namespace dev_adventure
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, projectionMatrix);
 
-            gameStates[currentState].Draw(spriteBatch);
-           /* spriteBatch.Draw(bg, new Vector2(0, 0), Color.White);
-            spriteBatch.Draw(a_s.Sprite, Vector2.Zero, a_s.Area, Color.White);*/
-
-            
+            gameStates[currentState].Draw(spriteBatch);            
 
             spriteBatch.End();
             base.Draw(gameTime);

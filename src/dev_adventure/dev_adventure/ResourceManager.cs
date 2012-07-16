@@ -37,21 +37,21 @@ namespace dev_adventure
         {
             logger.Info("Loading default content...");
 
-            LoadAsset<SpriteFont>("default");
+            LoadResource<SpriteFont>("default");
 
             logger.Info("Default content loaded");
         }
 
-        public static T GetAsset<T>(string name)
+        public static T GetResource<T>(string name)
         {
             Debug.Assert(assets.ContainsKey(name));
             object asset = assets[name];
             Debug.Assert(asset is T);
 
-            return (T)asset;
+            return (T) asset;
         }
 
-        public static void LoadAsset<T>(string name)
+        public static void LoadResource<T>(string name)
         {
             if (assets.ContainsKey(name))
             {
@@ -59,12 +59,19 @@ namespace dev_adventure
                 return;
             }
             logger.Info("Loading {0}: {1}...", typeof(T).Name, name);
-            assets.Add(name, loader.Load<T>(name));
-            System.Threading.Thread.Sleep(1000);
+            try
+            {
+                assets.Add(name, loader.Load<T>(name));
+            }
+            catch (ContentLoadException ex)
+            {
+                logger.ErrorException("Failed to load resource.", ex);
+                throw;
+            }
             logger.Info("Loaded  {0}: {1}",typeof(T).Name,  name);
         }
 
-        public static bool ContentLoaded(IEnumerable<ResMan.Asset> demand)
+        public static bool ResourcesLoaded(IEnumerable<ResMan.Asset> demand)
         {
             var names = from x in demand select x.Name;
 

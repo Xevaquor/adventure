@@ -13,23 +13,27 @@ using System.Diagnostics;
 
 namespace dev_adventure
 {
-    class PauseGameState : IGameState
+    class PauseGameState : GameState
     {
-        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         SpriteFont fnt;
         Vector2 pos = new Vector2(100, 100);
+
         public PauseGameState()
         {
-            requiredAssets.Add(new ResMan.Asset() { Name = "default", Type = ResMan.Asset.AssetType.SPRITE_FONT });
+            SetRequiredResources();
         }
 
-        HashSet<ResMan.Asset> requiredAssets = new HashSet<ResMan.Asset>();
-        public void Draw(SpriteBatch batch)
+        protected override void SetRequiredResources()
+        {
+            requiredResources.Add(new ResMan.Asset() { Name = "default", Type = ResMan.Asset.AssetType.SPRITE_FONT });
+        }
+
+        public override void Draw(SpriteBatch batch)
         {
             batch.DrawString(fnt, "PAUSE", pos, Color.Red);
         }
         MouseState ms, pms;
-        public void Update()
+        public override void Update()
         {
             pos += Vector2.One;
 
@@ -37,100 +41,58 @@ namespace dev_adventure
             ms = Mouse.GetState();
 
             if (ms.LeftButton == ButtonState.Pressed && pms.LeftButton == ButtonState.Released)
-                if (StateChangeRequested != null)
-                {
-                    StateChangeRequested(this, "menu");
-                    return;
-                }
+                RaiseStateChangeRequest("menu");
         }
-
-        public event RequestStateChangeDelegate StateChangeRequested;
-
-     
-        public void Activate( object obj)
+             
+        public override void Activate( object obj)
         {
-            if (ResMan.ContentLoaded(requiredAssets))
+            if (HandleResources())
             {
-                fnt = ResMan.GetAsset<SpriteFont>("default");
+                fnt = ResMan.GetResource<SpriteFont>("default");
             }
-            else
-            {
-                if (ContentRequested != null)
-                {
-                    ContentRequested(this, requiredAssets);
-                    return;
-                }
-                else
-                    logger.Warn("ContentRequest event is not handled");
-            }
+            
         }
-
-        public event RequestContent ContentRequested;
     }
 
-    public class MenuGameState : IGameState
+    public class MenuGameState : GameState
     {
-        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         SpriteFont font;
         Texture2D img;
         MouseState ms, pms;
 
         public MenuGameState()
         {
-
-            requiredAssets.Add(new ResMan.Asset() { Name = "default", Type = ResMan.Asset.AssetType.SPRITE_FONT });
-            requiredAssets.Add(new ResMan.Asset() { Name = "bg", Type = ResMan.Asset.AssetType.TEXTURE_2D });
+            requiredResources.Add(new ResMan.Asset() { Name = "default", Type = ResMan.Asset.AssetType.SPRITE_FONT });
+            requiredResources.Add(new ResMan.Asset() { Name = "bg", Type = ResMan.Asset.AssetType.TEXTURE_2D });
         }
 
-        public void Draw(SpriteBatch batch)
+        public override void Draw(SpriteBatch batch)
         {
             batch.Draw(img, Vector2.Zero, Color.White);
             batch.DrawString(font, "MENU", new Vector2(500), Color.Purple);
         }
 
-        public void Update()
+        public override void Update()
         {
             pms = ms;
             ms = Mouse.GetState();
 
             if (ms.LeftButton == ButtonState.Pressed && pms.LeftButton == ButtonState.Released)
-                if (StateChangeRequested != null)
-                {
-                    StateChangeRequested(this, "pause");
-                    return;
-                }
+            {
+                RaiseStateChangeRequest("pause");
+                return;
+            }
 
         }
-
-        public event RequestStateChangeDelegate StateChangeRequested;
-
-        HashSet<ResMan.Asset> requiredAssets = new HashSet<ResMan.Asset>();
-
-        public void Activate(object obj)
+        public override void Activate(object obj)
         {
-            if (ResMan.ContentLoaded(requiredAssets))
+            //base.Activate
+            if (HandleResources())
             {
-                font = ResMan.GetAsset<SpriteFont>("default");
-                img = ResMan.GetAsset<Texture2D>("bg");
+                font = ResMan.GetResource<SpriteFont>("default");
+                img = ResMan.GetResource<Texture2D>("bg");
             }
-            else
-            {
-                if (ContentRequested != null)
-                {
-                    ContentRequested(this, requiredAssets);
-                    return;
-                }
-                else
-                    logger.Warn("ContentRequest event is not handled");
-            }
-            
-        }
-        public event RequestContent ContentRequested;
-
-
-        public HashSet<string> RequiredContent
-        {
-            get { throw new NotImplementedException(); }
+                        
         }
     }
 

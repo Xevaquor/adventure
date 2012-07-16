@@ -16,9 +16,9 @@ namespace dev_adventure
     /// <summary>
     /// Requires used content ALREADY LOADED
     /// </summary>
-    class LoadingGameState : IGameState
+    class LoadingGameState : GameState
     {
-        private delegate void LoadAsyncDelegate(IEnumerable<ResMan.Asset> request);
+        private delegate bool LoadAsyncDelegate(IEnumerable<ResMan.Asset> request);
 
         volatile int progress = 0;
         string msg;
@@ -27,61 +27,70 @@ namespace dev_adventure
 
         public LoadingGameState()
         {
-            font = ResMan.GetAsset<SpriteFont>("default");
+            font = ResMan.GetResource<SpriteFont>("default");
         }
 
-        public void Draw(SpriteBatch batch)
+        public override void Draw(SpriteBatch batch)
         {
             batch.DrawString(font, msg, new Vector2(500, 500), Color.Red);
         }
         IAsyncResult async = null;
-        public void Update()
+        LoadAsyncDelegate asyncCall = null;
+
+        public override void Update()
         {
             msg = "Loading: " + progress.ToString();
             if (async == null || async.IsCompleted)
-                if (StateChangeRequested != null)
-                    StateChangeRequested(this, null);
+            {
+                if (!asyncCall.EndInvoke(async))
+                    throw new Exception("Failed to load resources");
+                RaiseStateChangeRequest(null);
+            }
 
         }
 
-        public void Activate(object request)
+        public override void Activate(object request)
         {
             //TODO check if has requred content else - error
             if (request == null)
             {
                 return;
             }
-            LoadAsyncDelegate asyncCall = LoadAsync;
-
+            asyncCall = LoadAsync;
+            
             async = asyncCall.BeginInvoke(request as IEnumerable<ResMan.Asset> , null, null);
             
         }
 
-        private void LoadAsync(IEnumerable<ResMan.Asset> request)
+        private bool LoadAsync(IEnumerable<ResMan.Asset> request)
         {
-            var omg = request as IEnumerable<ResMan.Asset>;
-            foreach (var item in omg)
+            try
             {
-                switch (item.Type)
+                var omg = request as IEnumerable<ResMan.Asset>;
+                foreach (var item in omg)
                 {
-                    case ResMan.Asset.AssetType.SPRITE_FONT:
-                        ResMan.LoadAsset<SpriteFont>(item.Name);
-                        break;
-                    case ResMan.Asset.AssetType.TEXTURE_2D:
-                        ResMan.LoadAsset<Texture2D>(item.Name);
-                        break;
-                    default:
-                        break;
+                    switch (item.Type)
+                    {
+                        case ResMan.Asset.AssetType.SPRITE_FONT:
+                            ResMan.LoadResource<SpriteFont>(item.Name);
+                            break;
+                        case ResMan.Asset.AssetType.TEXTURE_2D:
+                            ResMan.LoadResource<Texture2D>(item.Name);
+                            break;
+                        default:
+                            logger.Error("Unknown resource type: {0}. Resource name: {1}", item.Type, item.Name);
+                            return false;
+                            break;
+                    }
+                    System.Threading.Interlocked.Increment(ref progress);
                 }
-                System.Threading.Interlocked.Increment(ref progress);
             }
-
+            catch
+            {
+                return false;
+            }
+            return true;
 
         }
-
-        public event RequestStateChangeDelegate StateChangeRequested;
-        public event RequestContent ContentRequested;
-
-
     }
 }

@@ -94,6 +94,7 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>
@@ -110,7 +111,7 @@
   <ItemGroup>
     <Compile Include="AnimatedSprite.cs" />
     <Compile Include="FloatText.cs" />
-    <Compile Include="GameStates\IGameState.cs" />
+    <Compile Include="GameStates\GameState.cs" />
     <Compile Include="GameStates\LoadingGameState.cs" />
     <Compile Include="GameStates\PauseGameState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
