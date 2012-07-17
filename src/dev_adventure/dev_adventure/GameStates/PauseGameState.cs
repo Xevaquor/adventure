@@ -42,7 +42,7 @@ namespace dev_adventure
             pms = ms;
             ms = Mouse.GetState();
 
-            if (ms.LeftButton == ButtonState.Pressed && pms.LeftButton == ButtonState.Released)
+            if (InMan.LeftPressed)
                 RaiseStateChangeRequest("menu");
         }
              
@@ -92,7 +92,7 @@ namespace dev_adventure
                 return;
             }
 
-            if (ms.RightButton == ButtonState.Pressed && pms.RightButton == ButtonState.Released)
+            if (InMan.RightPressed)
             {
                 ft.Add("centryfuga", new Vector2(400, 400), Color.LightGreen);
             }

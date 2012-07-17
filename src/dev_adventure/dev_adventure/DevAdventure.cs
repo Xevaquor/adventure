@@ -19,7 +19,7 @@ namespace dev_adventure
         private static int frames_per_second = 30;
         public static int FRAMES_PER_SECOND { get { return frames_per_second; } }
 
-        private Vector2 desiredResolution = new Vector2(1280, 720);
+        private Vector2 desiredResolution = new Vector2(1920, 1080);
         private Vector2 realResolution = Vector2.Zero;
         private Matrix projectionMatrix = Matrix.Identity;
         private Viewport gameViewport = new Viewport();
@@ -30,6 +30,9 @@ namespace dev_adventure
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        public static float Scale;
+        public static int Margin;
+
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public DevAdventure()
@@ -39,6 +42,8 @@ namespace dev_adventure
 
             this.IsFixedTimeStep = true;
             this.TargetElapsedTime = TimeSpan.FromMilliseconds(1000 / FRAMES_PER_SECOND);
+
+            this.IsMouseVisible = true;
 
             SetGraphicMode();
         }
@@ -86,15 +91,17 @@ namespace dev_adventure
             float aspect = desiredResolution.X / desiredResolution.Y;
             float final_y = realResolution.X / aspect;
 
+            Scale = scale;
+
+
             int margin = (int)(Math.Abs(realResolution.Y - final_y) / 2);
             gameViewport = new Viewport(0, margin, (int)realResolution.X, (int)final_y);
-
+            Margin = margin;
             projectionMatrix = Matrix.CreateScale(scale, scale, 1);
 
             logger.Info("Created window {0}x{1} with {2} frames per second, windowed: {3}", realResolution.X, realResolution.Y, FRAMES_PER_SECOND, !fulscreen);
             
         }
-
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -104,6 +111,7 @@ namespace dev_adventure
             gameStates.Add("loading", new LoadingGameState());
             gameStates.Add("menu", new MenuGameState());
             gameStates.Add("pause", new PauseGameState());
+            gameStates.Add("demo", new DemoGameState());
 
             foreach (var state in gameStates)
             {
@@ -112,7 +120,7 @@ namespace dev_adventure
                 state.Value.spriteBatch = spriteBatch;
             }
 
-            currentState = "menu";
+            currentState = "demo";
             gameStates[currentState].Activate(null);
 
         }
@@ -167,6 +175,7 @@ namespace dev_adventure
 
         protected override void Update(GameTime gameTime)
         {
+            InMan.Update();
 
             gameStates[currentState].Update();
 

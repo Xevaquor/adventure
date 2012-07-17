@@ -65,7 +65,7 @@ namespace dev_adventure
             }
             catch (ContentLoadException ex)
             {
-                logger.ErrorException("Failed to load resource.", ex);
+                logger.Error("Failed to load resource. {0}", ex.Message);
                 throw;
             }
             logger.Info("Loaded  {0}: {1}",typeof(T).Name,  name);
