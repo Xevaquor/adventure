@@ -109,6 +109,7 @@ namespace dev_adventure
             {
                 state.Value.StateChangeRequested += new RequestStateChangeDelegate(Value_StateChangeRequested);
                 state.Value.ContentRequested += new RequestContent(Value_ContentRequested);
+                state.Value.spriteBatch = spriteBatch;
             }
 
             currentState = "menu";
@@ -181,7 +182,7 @@ namespace dev_adventure
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, projectionMatrix);
 
-            gameStates[currentState].Draw(spriteBatch);            
+            gameStates[currentState].Draw();            
 
             spriteBatch.End();
             base.Draw(gameTime);

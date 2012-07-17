@@ -17,10 +17,12 @@ namespace dev_adventure
     {
         SpriteFont fnt;
         Vector2 pos = new Vector2(100, 100);
+        FloatText ft = null;
 
         public PauseGameState()
         {
             SetRequiredResources();
+            //ft.Create(
         }
 
         protected override void SetRequiredResources()
@@ -28,9 +30,9 @@ namespace dev_adventure
             requiredResources.Add(new ResMan.Asset() { Name = "default", Type = ResMan.Asset.AssetType.SPRITE_FONT });
         }
 
-        public override void Draw(SpriteBatch batch)
+        public override void Draw()
         {
-            batch.DrawString(fnt, "PAUSE", pos, Color.Red);
+            spriteBatch.DrawString(fnt, "PAUSE", pos, Color.Red);
         }
         MouseState ms, pms;
         public override void Update()
@@ -49,6 +51,7 @@ namespace dev_adventure
             if (HandleResources())
             {
                 fnt = ResMan.GetResource<SpriteFont>("default");
+                ft = new FloatText(spriteBatch, fnt);
             }
             
         }
@@ -60,16 +63,22 @@ namespace dev_adventure
         Texture2D img;
         MouseState ms, pms;
 
+        FloatText ft;
+
         public MenuGameState()
         {
             requiredResources.Add(new ResMan.Asset() { Name = "default", Type = ResMan.Asset.AssetType.SPRITE_FONT });
             requiredResources.Add(new ResMan.Asset() { Name = "bg", Type = ResMan.Asset.AssetType.TEXTURE_2D });
-        }
 
-        public override void Draw(SpriteBatch batch)
+           
+        }
+        Random rnd = new Random();
+        public override void Draw()
         {
-            batch.Draw(img, Vector2.Zero, Color.White);
-            batch.DrawString(font, "MENU", new Vector2(500), Color.Purple);
+            spriteBatch.Draw(img, Vector2.Zero, Color.White);
+            spriteBatch.DrawString(font, "MENU", new Vector2(500), Color.Purple);
+
+            ft.DrawAll();
         }
 
         public override void Update()
@@ -83,14 +92,25 @@ namespace dev_adventure
                 return;
             }
 
+            if (ms.RightButton == ButtonState.Pressed && pms.RightButton == ButtonState.Released)
+            {
+                ft.Add("centryfuga", new Vector2(400, 400), Color.LightGreen);
+            }
+            ft.UpdateAll();
+
         }
         public override void Activate(object obj)
         {
             //base.Activate
             if (HandleResources())
             {
-                font = ResMan.GetResource<SpriteFont>("default");
-                img = ResMan.GetResource<Texture2D>("bg");
+                if (!initialized)
+                {
+                    font = ResMan.GetResource<SpriteFont>("default");
+                    img = ResMan.GetResource<Texture2D>("bg");
+                    ft = new FloatText(spriteBatch, font);
+                    initialized = true;
+                }              
             }
                         
         }

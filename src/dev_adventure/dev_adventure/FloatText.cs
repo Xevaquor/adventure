@@ -15,42 +15,45 @@ namespace dev_adventure
 {
     class FloatText
     {
-        private static SpriteBatch spriteBatch = null;
-        private static SpriteFont font = null;
-        private static Vector2 velocity = Vector2.Zero;             
-        private static LinkedList<FloatText> collection = null;
+        private class FloatTextInstance
+        {
+            public string message;
+            public Vector2 position;
+            public Color color;
+            public float livingTime;
+            public Vector2 origin;
+        }
+
+        private SpriteBatch spriteBatch = null;
+        private SpriteFont font = null;
+        private Vector2 velocity = Vector2.Zero;             
+        private LinkedList<FloatTextInstance> collection = null;
 
         private float TIME_TO_LIVE = DevAdventure.FRAMES_PER_SECOND;
         
-        private string message;
-        private Vector2 position;
-        private Color color;
-        private float livingTime;
-        private Vector2 origin;
-
         /// <summary>
         /// Init quas-singleton. Has to be called after SpriteBatch created.
         /// </summary>
         /// <param name="batch"></param>
         /// <param name="spriteFont"></param>
-        public static void Create(SpriteBatch batch, SpriteFont spriteFont)
+        public FloatText(SpriteBatch batch, SpriteFont spriteFont)
         {
             Debug.Assert(batch != null);
             spriteBatch = batch;
             font = spriteFont;
             velocity = new Vector2(0, -80.0f / DevAdventure.FRAMES_PER_SECOND);
-            collection = new LinkedList<FloatText>();
+            collection = new LinkedList<FloatTextInstance>();
         }
         /// <summary>
         /// Updates all text objects. Call once a frame.
         /// </summary>
-        public static void UpdateAll()
+        public void UpdateAll()
         {
-            LinkedListNode<FloatText> node = collection.First;
+            LinkedListNode<FloatTextInstance> node = collection.First;
             while (node != null)
             {
                 var next = node.Next;
-                if (!node.Value.Update())
+                if (!Update(node.Value))
                     collection.Remove(node);
                 node = next;
             }
@@ -58,11 +61,11 @@ namespace dev_adventure
         /// <summary>
         /// Draw all floating texts.
         /// </summary>
-        public static void DrawAll()
+        public void DrawAll()
         {
             foreach (var item in collection)
             {
-                item.Draw();
+                Draw(item);
             }
         }
         /// <summary>
@@ -71,9 +74,9 @@ namespace dev_adventure
         /// <param name="msg">Message to be shown.</param>
         /// <param name="pos">Position of center of the message.</param>
         /// <param name="c">Message colour.</param>
-        public static void Add(string msg, Vector2 pos, Color c)
+        public void Add(string msg, Vector2 pos, Color c)
         {
-            FloatText ft = new FloatText();
+            FloatTextInstance ft = new FloatTextInstance();
             ft.message = msg;
             ft.position = pos;
             ft.color = c;
@@ -84,19 +87,19 @@ namespace dev_adventure
         }
 
         /// <returns>False if dead, true if alive</returns>
-        public bool Update()
+        private bool Update(FloatTextInstance inst)
         {
-            if (livingTime++ >= TIME_TO_LIVE)
+            if (inst.livingTime++ >= TIME_TO_LIVE)
                 return false;
-            position += velocity;
-                    color.A -= (byte)(255 / TIME_TO_LIVE);
-                
+            inst.position += velocity;
+            inst.color.A -= (byte)(255 / TIME_TO_LIVE);
+
             return true;
         }
 
-        public void Draw()
+        private void Draw(FloatTextInstance inst)
         {
-            spriteBatch.DrawString(font, message, position, color, 0.0f, origin, 1f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(font, inst.message, inst.position, inst.color, 0.0f, inst.origin, 1f, SpriteEffects.None, 0);
         }
     }
 }

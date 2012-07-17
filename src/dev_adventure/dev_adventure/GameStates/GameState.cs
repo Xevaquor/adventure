@@ -20,8 +20,11 @@ namespace dev_adventure
     {
         protected static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         protected HashSet<ResMan.Asset> requiredResources = new HashSet<ResMan.Asset>();
+        protected bool initialized = false;
 
-        public abstract void Draw(SpriteBatch batch);
+        public SpriteBatch spriteBatch;
+
+        public abstract void Draw();
         public abstract void Update();
         public virtual void Activate(object obj) 
         { 
@@ -53,8 +56,6 @@ namespace dev_adventure
          *      ...
          */      
         
-
-
         protected virtual void SetRequiredResources() { }
         
         protected void RaiseStateChangeRequest(string requested_state)

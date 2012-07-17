@@ -30,9 +30,9 @@ namespace dev_adventure
             font = ResMan.GetResource<SpriteFont>("default");
         }
 
-        public override void Draw(SpriteBatch batch)
+        public override void Draw()
         {
-            batch.DrawString(font, msg, new Vector2(500, 500), Color.Red);
+            spriteBatch.DrawString(font, msg, new Vector2(500, 500), Color.Red);
         }
         IAsyncResult async = null;
         LoadAsyncDelegate asyncCall = null;
