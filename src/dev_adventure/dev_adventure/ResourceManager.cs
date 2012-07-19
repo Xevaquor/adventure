@@ -62,7 +62,6 @@ namespace dev_adventure
             try
             {
                 assets.Add(name, loader.Load<T>(name));
-                System.Threading.Thread.Sleep(500);
             }
             catch (ContentLoadException ex)
             {

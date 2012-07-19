@@ -111,9 +111,8 @@
   <ItemGroup>
     <Compile Include="AnimatedSprite.cs" />
     <Compile Include="FloatText.cs" />
-    <Compile Include="GameStates\DemoGameState.cs" />
-    <Compile Include="GameStates\GameState.cs" />
-    <Compile Include="GameStates\LoadingGameState.cs" />
+    <Compile Include="GameStates\IGameState.cs" />
+    <Compile Include="GameStates\MenuGameState.cs" />
     <Compile Include="GameStates\PauseGameState.cs" />
     <Compile Include="InMan.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

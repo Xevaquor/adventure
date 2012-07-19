@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace dev_adventure
 {
@@ -62,8 +64,8 @@ namespace dev_adventure
 
         private void SetGraphicMode()
         {
-            bool fulscreen = false;   
-            string[] args = Environment.GetCommandLineArgs();            
+            bool fulscreen = false;
+            string[] args = Environment.GetCommandLineArgs();
             try
             {
                 frames_per_second = int.Parse(args[1]);
@@ -80,8 +82,8 @@ namespace dev_adventure
                 frames_per_second = 30;
             }
 
-            graphics.PreferredBackBufferWidth = (int) realResolution.X;
-            graphics.PreferredBackBufferHeight = (int) realResolution.Y;
+            graphics.PreferredBackBufferWidth = (int)realResolution.X;
+            graphics.PreferredBackBufferHeight = (int)realResolution.Y;
             graphics.IsFullScreen = fulscreen;
             graphics.ApplyChanges();
 
@@ -100,7 +102,7 @@ namespace dev_adventure
             projectionMatrix = Matrix.CreateScale(scale, scale, 1);
 
             logger.Info("Created window {0}x{1} with {2} frames per second, windowed: {3}", realResolution.X, realResolution.Y, FRAMES_PER_SECOND, !fulscreen);
-            
+
         }
         protected override void LoadContent()
         {
@@ -108,6 +110,23 @@ namespace dev_adventure
 
             ResMan.LoadDefaultContent();
             gameStates = new Dictionary<string, IGameState>();
+
+
+            gameStates.Add("menu", new MenuGameState());
+            gameStates.Add("pause", new PauseGameState());
+
+
+            foreach (var item in gameStates)
+            {
+                item.Value.RequestingResources += new ResourceRequestDelegate(Value_RequestingResources);
+                item.Value.RequestingStateChange += new StateChangeRequestDelegate(Value_RequestingStateChange);
+            }
+
+            currentState = "menu";
+
+            gameStates[currentState].Activate("default");
+
+            /*
             gameStates.Add("loading", new LoadingGameState());
             //gameStates.Add("menu", new MenuGameState());
             gameStates.Add("pause", new PauseGameState());
@@ -121,46 +140,73 @@ namespace dev_adventure
             }
 
             currentState = "demo";
-            gameStates[currentState].Activate(null);
+            gameStates[currentState].Activate(null);*/
 
         }
 
-        void Value_ContentRequested(IGameState sender, IEnumerable<ResMan.Asset> assets)
-        {
-            previousState = currentState;
-            currentState = "loading";
-            gameStates[currentState].Activate(assets);
 
-            this.SuppressDraw();
-        }
-
-        void Value_StateChangeRequested(IGameState sender, string requested_state, object param)
+        void Value_RequestingStateChange(string name, object obj)
         {
-            if (requested_state == null)
+            if (name == null)
             {
-                string tmp = currentState;
                 currentState = previousState;
-                previousState = tmp;
-                gameStates[currentState].Activate(param);
             }
             else
             {
                 previousState = currentState;
-                currentState = requested_state;
-                gameStates[currentState].Activate(param);
+                currentState = name;
             }
-            logger.Info("State changed to {0}", currentState);
+            gameStates[currentState].Activate(obj);
 
-            this.SuppressDraw();
-            
         }
 
+        private string caller = "";
+        bool IsBeingLoading = false;
+        Task async;
 
-        void DevAdventure_StateChangeRequested(string requested_state)
+        void Value_RequestingResources(IEnumerable<ResMan.Asset> res_list)
         {
-            currentState = requested_state;
-            this.SuppressDraw();
+            caller = currentState;
+            IsBeingLoading = true;
+
+            Action<object> omg = LoadResourcesAsync;
+            async = new Task(omg, res_list);
+            async.Start();
+
+            //LoadResourcesAsync(res_list);
         }
+
+        private void LoadResourcesAsync(object res_list)
+        {
+            progress = 0;
+            IEnumerable<ResMan.Asset> request = res_list as IEnumerable<ResMan.Asset>;
+            try
+            {
+                foreach (var item in request)
+                {
+                    System.Threading.Interlocked.Increment(ref progress);
+                    switch (item.Type)
+                    {
+                        case ResMan.Asset.AssetType.SPRITE_FONT:
+                            ResMan.LoadResource<SpriteFont>(item.Name);
+                            break;
+                        case ResMan.Asset.AssetType.TEXTURE_2D:
+                            ResMan.LoadResource<Texture2D>(item.Name);
+                            break;
+                        default:
+                            logger.Error("Unknown resource type: {0}. Resource name: {1}", item.Type, item.Name);
+                            break;
+                    }
+
+                }
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+       
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -177,10 +223,22 @@ namespace dev_adventure
         {
             InMan.Update();
 
-            gameStates[currentState].Update();
+            if (IsBeingLoading)
+            {
+                if (async.IsCompleted)
+                {
+                    IsBeingLoading = false;
+                    SuppressDraw();
+                    gameStates[currentState].Activate(null);
+                }
+            }
+            else
+                gameStates[currentState].Update();
 
             base.Update(gameTime);
         }
+
+        private int progress = 0;
 
         protected override void Draw(GameTime gameTime)
         {
@@ -190,8 +248,12 @@ namespace dev_adventure
             GraphicsDevice.Viewport = gameViewport;
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, projectionMatrix);
-
-            gameStates[currentState].Draw();            
+            if (IsBeingLoading)
+            {
+                spriteBatch.DrawString(ResMan.GetResource<SpriteFont>("default"), "LOADING>>>>>>" + progress.ToString(), new Vector2(400, 400), Color.Yellow);
+            }
+            else
+                gameStates[currentState].Draw(spriteBatch);
 
             spriteBatch.End();
             base.Draw(gameTime);
