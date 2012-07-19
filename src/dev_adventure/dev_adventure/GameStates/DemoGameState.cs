@@ -35,7 +35,9 @@ namespace dev_adventure
 
         public override void Update()
         {
-            msg = string.Format("Mouse position: {0}", InMan.MousePosition); 
+            msg = string.Format("Mouse position: {0}", InMan.MousePosition);
+            if (InMan.LeftPressed)
+                RaiseStateChangeRequest("pause");
         }
 
         public override bool Activate(object obj)

@@ -110,7 +110,7 @@ namespace dev_adventure
             gameStates = new Dictionary<string, GameState>();
             gameStates.Add("loading", new LoadingGameState());
             //gameStates.Add("menu", new MenuGameState());
-            //gameStates.Add("pause", new PauseGameState());
+            gameStates.Add("pause", new PauseGameState());
             gameStates.Add("demo", new DemoGameState());
 
             foreach (var state in gameStates)

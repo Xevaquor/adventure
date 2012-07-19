@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System.Diagnostics;
-/*
+
 namespace dev_adventure
 {
     class PauseGameState : GameState
@@ -19,10 +19,9 @@ namespace dev_adventure
         Vector2 pos = new Vector2(100, 100);
         FloatText ft = null;
 
-        public PauseGameState()
+        public override void Initialize()
         {
-            SetRequiredResources();
-            //ft.Create(
+            fnt = ResMan.GetResource<SpriteFont>("default");
         }
 
         protected override void SetRequiredResources()
@@ -43,20 +42,20 @@ namespace dev_adventure
             ms = Mouse.GetState();
 
             if (InMan.LeftPressed)
-                RaiseStateChangeRequest("menu");
+                RaiseStateChangeRequest(null);
         }
-             
-        public override void Activate( object obj)
+
+        public override bool Activate(object obj)
         {
-            if (HandleResources())
-            {
-                fnt = ResMan.GetResource<SpriteFont>("default");
-                ft = new FloatText(spriteBatch, fnt);
-            }
-            
+            if (!base.Activate(obj))
+                return false;
+
+            return true;
+
         }
     }
-
+}
+/*
     public class MenuGameState : GameState
     {
         SpriteFont font;
