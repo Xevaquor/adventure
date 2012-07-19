@@ -23,6 +23,8 @@ namespace dev_adventure
         {
             requiredResources.Add(new ResMan.Asset() { Name = "default", Type = ResMan.Asset.AssetType.SPRITE_FONT });
             requiredResources.Add(new ResMan.Asset() { Name = "checkboard", Type = ResMan.Asset.AssetType.TEXTURE_2D });
+            requiredResources.Add(new ResMan.Asset() { Name = "bg", Type = ResMan.Asset.AssetType.TEXTURE_2D });
+            requiredResources.Add(new ResMan.Asset() { Name = "bg2", Type = ResMan.Asset.AssetType.TEXTURE_2D });
         }
 
         public override void Draw()

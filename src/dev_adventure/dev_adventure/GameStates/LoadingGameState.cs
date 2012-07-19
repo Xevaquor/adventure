@@ -25,16 +25,14 @@ namespace dev_adventure
 
         SpriteFont font = null;
 
-        public override void Initialize()
-        {
-            ;
-        }
-
         public LoadingGameState()
         {
             font = ResMan.GetResource<SpriteFont>("default");
         }
-
+        public override void Initialize()
+        {
+            ;
+        }
         public override void Draw()
         {
             spriteBatch.DrawString(font, msg, new Vector2(500, 500), Color.Red);
