@@ -13,7 +13,7 @@ using System.Diagnostics;
 
 namespace dev_adventure
 {
-    class DemoGameState : GameState
+    class DemoGameState : IGameState
     {
         SpriteFont font = null;
         Texture2D checkboard = null;
@@ -23,8 +23,6 @@ namespace dev_adventure
         {
             requiredResources.Add(new ResMan.Asset() { Name = "default", Type = ResMan.Asset.AssetType.SPRITE_FONT });
             requiredResources.Add(new ResMan.Asset() { Name = "checkboard", Type = ResMan.Asset.AssetType.TEXTURE_2D });
-            requiredResources.Add(new ResMan.Asset() { Name = "bg", Type = ResMan.Asset.AssetType.TEXTURE_2D });
-            requiredResources.Add(new ResMan.Asset() { Name = "bg2", Type = ResMan.Asset.AssetType.TEXTURE_2D });
         }
 
         public override void Draw()
@@ -37,13 +35,22 @@ namespace dev_adventure
         {
             msg = string.Format("Mouse position: {0}", InMan.MousePosition);
             if (InMan.LeftPressed)
-                RaiseStateChangeRequest("pause");
+            {
+                RaiseStateChangeRequest("demo");
+                //RaiseStateChangeRequest("pause");
+            }
         }
 
         public override bool Activate(object obj)
         {
             if (!base.Activate(obj))
                 return false;
+
+            if (obj is string)
+            {
+                requiredResources.Add(new ResMan.Asset() { Name = "bg", Type = ResMan.Asset.AssetType.TEXTURE_2D });
+                RaiseContentRequest();
+            }
 
             return true;
         }

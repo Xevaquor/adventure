@@ -13,7 +13,7 @@ using System.Diagnostics;
 
 namespace dev_adventure
 {
-    class PauseGameState : GameState
+    class PauseGameState : IGameState
     {
         SpriteFont fnt;
         Vector2 pos = new Vector2(100, 100);

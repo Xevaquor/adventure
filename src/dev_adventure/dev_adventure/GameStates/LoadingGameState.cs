@@ -16,7 +16,7 @@ namespace dev_adventure
     /// <summary>
     /// Requires used content ALREADY LOADED
     /// </summary>
-    class LoadingGameState : GameState
+    class LoadingGameState : IGameState
     {
         private delegate bool LoadAsyncDelegate(IEnumerable<ResMan.Asset> request);
 
@@ -30,6 +30,10 @@ namespace dev_adventure
             font = ResMan.GetResource<SpriteFont>("default");
         }
         public override void Initialize()
+        {
+            ;
+        }
+        protected override void SetRequiredResources()
         {
             ;
         }

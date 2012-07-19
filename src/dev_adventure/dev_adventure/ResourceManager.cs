@@ -53,7 +53,6 @@ namespace dev_adventure
 
         public static void LoadResource<T>(string name)
         {
-            System.Threading.Thread.Sleep(500);
             if (assets.ContainsKey(name))
             {
                 logger.Warn("Asset {0} - (requested type - {1}) already loaded.", name, typeof(T).Name);
@@ -63,6 +62,7 @@ namespace dev_adventure
             try
             {
                 assets.Add(name, loader.Load<T>(name));
+                System.Threading.Thread.Sleep(500);
             }
             catch (ContentLoadException ex)
             {

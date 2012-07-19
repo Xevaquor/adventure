@@ -13,10 +13,10 @@ using System.Diagnostics;
 
 namespace dev_adventure
 {
-    public delegate void RequestStateChangeDelegate(GameState sender, string requested_state);
-    public delegate void RequestContent(GameState sender, IEnumerable<ResMan.Asset> assets);
+    public delegate void RequestStateChangeDelegate(IGameState sender, string requested_state);
+    public delegate void RequestContent(IGameState sender, IEnumerable<ResMan.Asset> assets);
 
-    public abstract class GameState
+    public abstract class IGameState
     {
         protected static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         protected HashSet<ResMan.Asset> requiredResources = new HashSet<ResMan.Asset>();
@@ -24,19 +24,38 @@ namespace dev_adventure
 
         public SpriteBatch spriteBatch;
 
+        /// <summary>
+        /// Obvious
+        /// </summary>
         public abstract void Draw();
+        /// <summary>
+        /// Obvious.
+        /// </summary>
         public abstract void Update();
+        /// <summary>
+        /// Called after needed resources are loaded. Assigning resources to vars should be put here.
+        /// </summary>
+        public abstract void Initialize();
 
-        public GameState()
+        public IGameState()
         {
             SetRequiredResources();
         }
-
-        public abstract void Initialize();
-
+        /// <summary>
+        /// Called when state is activated - e.g. every time when player turn pause on.
+        /// Ought to call base.Active as shown below:
+        /// <code>
+        /// if (!base.Activate(obj))
+        ///     return false;  //true/false has no meaning. Should *return* from here because state is't ready to execute.
+        ///
+        /// return true;
+        /// </code>
+        /// </summary>
+        /// <param name="obj">Optional parameter for state, eg list of resources to load. I have no idea what could be other case. 
+        /// (Maybe if it would be possible to send argument from state request?</param>
+        /// <returns>Return value has meaning only in IGameState - determines if it is reaady to work</returns>
         public virtual bool Activate(object obj) 
         {
-
             if (HandleResources())
             {
                 if (!initialized)
@@ -49,6 +68,12 @@ namespace dev_adventure
             return false;
         }
 
+        //TODO: lover access-modifier?
+        /// <summary>
+        /// Check if needed resources are loaded. If not change state to loading to load it.
+        /// Remember to implement SetRequiredResources!
+        /// </summary>
+        /// <returns>Do we have all needed resources?</returns>
         protected bool HandleResources()
         {
             if (ResMan.ResourcesLoaded(requiredResources))
@@ -67,13 +92,10 @@ namespace dev_adventure
             return false;
         }
 
-        /*
-         * -AssignResources : void
-         *      tex = ResMan.GetResource<T>(name);
-         *      ...
-         */      
-        
-        protected virtual void SetRequiredResources() { }
+        /// <summary>
+        /// Set resources what you need. DO NOT LOAD ANY RESOURCES ON YOUR OWN!!!!!!1111oneoneone
+        /// </summary>
+        protected abstract void SetRequiredResources();
         
         protected void RaiseStateChangeRequest(string requested_state)
         {
@@ -82,7 +104,6 @@ namespace dev_adventure
             else
                 logger.Warn("StateChangeRequest is not handled");
         }
-
         protected void RaiseContentRequest()
         {
             if (ContentRequested != null)

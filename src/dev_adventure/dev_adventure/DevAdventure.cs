@@ -24,7 +24,7 @@ namespace dev_adventure
         private Matrix projectionMatrix = Matrix.Identity;
         private Viewport gameViewport = new Viewport();
 
-        private Dictionary<string, GameState> gameStates = null;
+        private Dictionary<string, IGameState> gameStates = null;
         private string currentState, previousState;
 
         GraphicsDeviceManager graphics;
@@ -107,7 +107,7 @@ namespace dev_adventure
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             ResMan.LoadDefaultContent();
-            gameStates = new Dictionary<string, GameState>();
+            gameStates = new Dictionary<string, IGameState>();
             gameStates.Add("loading", new LoadingGameState());
             //gameStates.Add("menu", new MenuGameState());
             gameStates.Add("pause", new PauseGameState());
@@ -125,7 +125,7 @@ namespace dev_adventure
 
         }
 
-        void Value_ContentRequested(GameState sender, IEnumerable<ResMan.Asset> assets)
+        void Value_ContentRequested(IGameState sender, IEnumerable<ResMan.Asset> assets)
         {
             previousState = currentState;
             currentState = "loading";
@@ -134,7 +134,7 @@ namespace dev_adventure
             this.SuppressDraw();
         }
 
-        void Value_StateChangeRequested(GameState sender, string requested_state)
+        void Value_StateChangeRequested(IGameState sender, string requested_state)
         {
             if (requested_state == null)
             {
