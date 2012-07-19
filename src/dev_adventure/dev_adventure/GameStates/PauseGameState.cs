@@ -18,6 +18,8 @@ namespace dev_adventure
         SpriteFont fnt;
         Vector2 pos = new Vector2(100, 100);
         FloatText ft = null;
+        string msg = "DEFAUT";
+        bool omg = false;
 
         public override void Initialize()
         {
@@ -31,7 +33,7 @@ namespace dev_adventure
 
         public override void Draw()
         {
-            spriteBatch.DrawString(fnt, "PAUSE", pos, Color.Red);
+            spriteBatch.DrawString(fnt, msg , pos, Color.Red);
         }
         MouseState ms, pms;
         public override void Update()
@@ -42,13 +44,20 @@ namespace dev_adventure
             ms = Mouse.GetState();
 
             if (InMan.LeftPressed)
-                RaiseStateChangeRequest(null);
+                RaiseStateChangeRequest(null, null);
         }
 
         public override bool Activate(object obj)
         {
+            if (obj is string)
+            {
+                requiredResources.Add(new ResMan.Asset() { Name = "tahoma", Type = ResMan.Asset.AssetType.SPRITE_FONT });
+                //RaiseContentRequest();
+            }
             if (!base.Activate(obj))
                 return false;
+
+
 
             return true;
 

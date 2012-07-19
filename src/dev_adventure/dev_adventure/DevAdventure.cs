@@ -134,20 +134,20 @@ namespace dev_adventure
             this.SuppressDraw();
         }
 
-        void Value_StateChangeRequested(IGameState sender, string requested_state)
+        void Value_StateChangeRequested(IGameState sender, string requested_state, object param)
         {
             if (requested_state == null)
             {
                 string tmp = currentState;
                 currentState = previousState;
                 previousState = tmp;
-                gameStates[currentState].Activate(null);
+                gameStates[currentState].Activate(param);
             }
             else
             {
                 previousState = currentState;
                 currentState = requested_state;
-                gameStates[currentState].Activate(null);
+                gameStates[currentState].Activate(param);
             }
             logger.Info("State changed to {0}", currentState);
 

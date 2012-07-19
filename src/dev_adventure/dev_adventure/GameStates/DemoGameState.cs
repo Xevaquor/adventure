@@ -36,7 +36,7 @@ namespace dev_adventure
             msg = string.Format("Mouse position: {0}", InMan.MousePosition);
             if (InMan.LeftPressed)
             {
-                RaiseStateChangeRequest("demo");
+                RaiseStateChangeRequest("pause", "omg");
                 //RaiseStateChangeRequest("pause");
             }
         }

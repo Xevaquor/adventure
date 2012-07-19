@@ -51,7 +51,7 @@ namespace dev_adventure
             {
                 if (!asyncCall.EndInvoke(async))
                     throw new Exception("Failed to load resources");
-                RaiseStateChangeRequest(null);
+                RaiseStateChangeRequest(null, null);
             }
 
         }

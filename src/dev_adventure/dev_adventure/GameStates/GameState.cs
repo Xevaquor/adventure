@@ -13,7 +13,7 @@ using System.Diagnostics;
 
 namespace dev_adventure
 {
-    public delegate void RequestStateChangeDelegate(IGameState sender, string requested_state);
+    public delegate void RequestStateChangeDelegate(IGameState sender, string requested_state, object param);
     public delegate void RequestContent(IGameState sender, IEnumerable<ResMan.Asset> assets);
 
     public abstract class IGameState
@@ -97,10 +97,10 @@ namespace dev_adventure
         /// </summary>
         protected abstract void SetRequiredResources();
         
-        protected void RaiseStateChangeRequest(string requested_state)
+        protected void RaiseStateChangeRequest(string requested_state, object param)
         {
             if (StateChangeRequested != null)
-                StateChangeRequested(this, requested_state);
+                StateChangeRequested(this, requested_state, param);
             else
                 logger.Warn("StateChangeRequest is not handled");
         }
