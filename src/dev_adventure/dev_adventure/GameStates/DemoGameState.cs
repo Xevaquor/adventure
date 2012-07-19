@@ -19,11 +19,6 @@ namespace dev_adventure
         Texture2D checkboard = null;
         string msg = "";
 
-        public DemoGameState()
-        {
-            SetRequiredResources();
-        }
-
         protected override void SetRequiredResources()
         {
             requiredResources.Add(new ResMan.Asset() { Name = "default", Type = ResMan.Asset.AssetType.SPRITE_FONT });
@@ -41,17 +36,17 @@ namespace dev_adventure
             msg = string.Format("Mouse position: {0}", InMan.MousePosition); 
         }
 
-        public override void Activate(object obj)
+        public override bool Activate(object obj)
         {
-            if (HandleResources())
-            {
-                if (!initialized)
-                {
-                    font = ResMan.GetResource<SpriteFont>("default");
-                    checkboard = ResMan.GetResource<Texture2D>("checkboard");
-                    initialized = true;
-                }
-            }
+            if (!base.Activate(obj))
+                return false;
+
+            return true;
+        }
+        public override void Initialize()
+        {
+            font = ResMan.GetResource<SpriteFont>("default");
+            checkboard = ResMan.GetResource<Texture2D>("checkboard");
         }
     }
 }

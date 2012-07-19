@@ -109,8 +109,8 @@ namespace dev_adventure
             ResMan.LoadDefaultContent();
             gameStates = new Dictionary<string, GameState>();
             gameStates.Add("loading", new LoadingGameState());
-            gameStates.Add("menu", new MenuGameState());
-            gameStates.Add("pause", new PauseGameState());
+            //gameStates.Add("menu", new MenuGameState());
+            //gameStates.Add("pause", new PauseGameState());
             gameStates.Add("demo", new DemoGameState());
 
             foreach (var state in gameStates)

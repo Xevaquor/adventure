@@ -26,18 +26,35 @@ namespace dev_adventure
 
         public abstract void Draw();
         public abstract void Update();
-        public virtual void Activate(object obj) 
-        { 
-            /*
-             * if call HandleResources
-             *      call AssignResources
-             */
+
+        public GameState()
+        {
+            SetRequiredResources();
+        }
+
+        public abstract void Initialize();
+
+        public virtual bool Activate(object obj) 
+        {
+
+            if (HandleResources())
+            {
+                if (!initialized)
+                {
+                    Initialize();
+                    initialized = true;
+                }
+                return true;
+            }
+            return false;
         }
 
         protected bool HandleResources()
         {
             if (ResMan.ResourcesLoaded(requiredResources))
+            {
                 return true;
+            }
             else
             {
                 if (ContentRequested != null)

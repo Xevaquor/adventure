@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System.Diagnostics;
-
+/*
 namespace dev_adventure
 {
     class PauseGameState : GameState
@@ -117,3 +117,4 @@ namespace dev_adventure
     }
 
 }
+*/

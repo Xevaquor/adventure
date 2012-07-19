@@ -25,6 +25,11 @@ namespace dev_adventure
 
         SpriteFont font = null;
 
+        public override void Initialize()
+        {
+            ;
+        }
+
         public LoadingGameState()
         {
             font = ResMan.GetResource<SpriteFont>("default");
@@ -49,17 +54,18 @@ namespace dev_adventure
 
         }
 
-        public override void Activate(object request)
+        public override bool Activate(object request)
         {
             //TODO check if has requred content else - error
             if (request == null)
             {
-                return;
+                return true;
             }
             asyncCall = LoadAsync;
             
             async = asyncCall.BeginInvoke(request as IEnumerable<ResMan.Asset> , null, null);
-            
+
+            return true;
         }
 
         private bool LoadAsync(IEnumerable<ResMan.Asset> request)
