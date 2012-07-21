@@ -16,11 +16,15 @@ namespace dev_adventure
     static class InMan
     {
         private static MouseState mouseState, prevMouseState;
+        private static KeyboardState keySate, prevKeyState;
 
         public static void Update()
         {
             prevMouseState = mouseState;
             mouseState = Mouse.GetState();
+
+            prevKeyState = keySate;
+            keySate = Keyboard.GetState();
         }
 
         public static bool LeftDown
@@ -34,6 +38,11 @@ namespace dev_adventure
 
         public static bool RightPressed
         { get { return RightDown && (prevMouseState.RightButton == ButtonState.Released); } }
+
+        public static bool KeyDown(Keys key)
+        {
+            return keySate.IsKeyDown(key);
+        }
 
         public static Vector2 MousePosition
         {

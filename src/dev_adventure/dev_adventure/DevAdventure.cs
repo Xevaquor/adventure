@@ -37,6 +37,8 @@ namespace dev_adventure
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+        Texture2D bugTex = null;
+
         public DevAdventure()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -125,6 +127,9 @@ namespace dev_adventure
             currentState = "menu";
 
             gameStates[currentState].Activate("default");
+
+            ResMan.LoadResource<Texture2D>("bug");
+            bugTex = ResMan.GetResource<Texture2D>("bug");
 
         }
 
@@ -219,17 +224,62 @@ namespace dev_adventure
             else
                 gameStates[currentState].Update();
 
+            bugOrigin = new Vector2(bugTex.Width / 2, bugTex.Height / 2);
+
+            if (InMan.KeyDown(Keys.Right))
+                bugAngle += 0.1f;
+            else if (InMan.KeyDown(Keys.Left))
+                bugAngle -= 0.1f;
+
+            int modifier = 0;
+            if (InMan.KeyDown(Keys.Up))
+                modifier--;
+            if (InMan.KeyDown(Keys.Down))
+                modifier++;
+
+            if (InMan.KeyDown(Keys.W))
+                camera.Y-= 10;
+            if(InMan.KeyDown(Keys.S))
+                camera.Y+= 10;
+            if (InMan.KeyDown(Keys.A))
+                camera.X-= 10;
+            if (InMan.KeyDown(Keys.D))
+                camera.X+= 10;
+
+            Vector2 v = new Vector2(-r * (float)Math.Sin(bugAngle), r * (float)Math.Cos(bugAngle)) * modifier;
+            bugPos += v;
+
+            relativePos = bugPos - camera;
+
             base.Update(gameTime);
         }
 
         private int progress = 0;
 
+        Vector2 bugPos = new Vector2(120, 120) * 5;
+        float bugAngle = MathHelper.ToRadians(30f);
+        Vector2 bugOrigin = Vector2.Zero;
+        Vector2 camera = Vector2.Zero;
+        Vector2 relativePos = Vector2.Zero;
+        float r = 10f;
+
+
         protected override void Draw(GameTime gameTime)
         {
+
+
             Viewport full_view = new Viewport(0, 0, (int)realResolution.X, (int)realResolution.Y);
-            GraphicsDevice.Viewport = full_view;
-            GraphicsDevice.Clear(Color.Gray);
-            GraphicsDevice.Viewport = gameViewport;
+           // GraphicsDevice.Viewport = full_view;
+            GraphicsDevice.Clear(Color.Black);
+            try
+            {
+                GraphicsDevice.Viewport = gameViewport;
+            }
+            catch
+            {
+                ;//I really don't know waht's going on. It crashes when unminimizing
+            }
+
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, projectionMatrix);
             if (IsBeingLoading)
@@ -237,7 +287,18 @@ namespace dev_adventure
                 spriteBatch.DrawString(ResMan.GetResource<SpriteFont>("default"), "LOADING>>>>>>" + progress.ToString(), new Vector2(400, 400), Color.Yellow);
             }
             else
+            {
                 gameStates[currentState].Draw(spriteBatch);
+
+
+                //spriteBatch.Draw(bugTex, bugPos, Color.White);
+                spriteBatch.Draw(bugTex, relativePos, null, Color.White, bugAngle, bugOrigin, 1.0f, SpriteEffects.None, 0);
+                spriteBatch.DrawString(ResMan.GetResource<SpriteFont>("default"), "Absolute bug pos: " + bugPos.ToString(), Vector2.Zero, Color.Purple);
+                spriteBatch.DrawString(ResMan.GetResource<SpriteFont>("default"), "Camera pos: " + camera.ToString(), new Vector2(0, 100), Color.Purple);
+                spriteBatch.DrawString(ResMan.GetResource<SpriteFont>("default"), "relative pos: " + relativePos.ToString(), new Vector2(0, 200), Color.Purple);
+
+                
+            }
 
             spriteBatch.End();
             base.Draw(gameTime);
