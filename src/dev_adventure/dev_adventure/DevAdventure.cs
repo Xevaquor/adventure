@@ -251,6 +251,8 @@ namespace dev_adventure
 
             relativePos = bugPos - camera;
 
+            camera = bugPos - desiredResolution / 2;
+
             base.Update(gameTime);
         }
 
@@ -290,6 +292,7 @@ namespace dev_adventure
             {
                 gameStates[currentState].Draw(spriteBatch);
 
+                spriteBatch.Draw(ResMan.GetResource<Texture2D>("checkboard"), Vector2.Zero - camera, Color.Red);
 
                 //spriteBatch.Draw(bugTex, bugPos, Color.White);
                 spriteBatch.Draw(bugTex, relativePos, null, Color.White, bugAngle, bugOrigin, 1.0f, SpriteEffects.None, 0);
