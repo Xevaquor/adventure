@@ -126,22 +126,6 @@ namespace dev_adventure
 
             gameStates[currentState].Activate("default");
 
-            /*
-            gameStates.Add("loading", new LoadingGameState());
-            //gameStates.Add("menu", new MenuGameState());
-            gameStates.Add("pause", new PauseGameState());
-            gameStates.Add("demo", new DemoGameState());
-
-            foreach (var state in gameStates)
-            {
-                state.Value.StateChangeRequested += new RequestStateChangeDelegate(Value_StateChangeRequested);
-                state.Value.ContentRequested += new RequestContent(Value_ContentRequested);
-                state.Value.spriteBatch = spriteBatch;
-            }
-
-            currentState = "demo";
-            gameStates[currentState].Activate(null);*/
-
         }
 
 
