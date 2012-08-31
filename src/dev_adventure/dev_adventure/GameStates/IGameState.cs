@@ -18,6 +18,8 @@ namespace dev_adventure
     abstract class IGameState
     {
         protected HashSet<ResMan.Asset> requiredResources = new HashSet<ResMan.Asset>();
+        protected Vector2 camera;
+        public int framesPerSecond = 1;
 
         public IGameState()
         {
@@ -64,6 +66,19 @@ namespace dev_adventure
         {
             if (RequestingStateChange != null)
                 RequestingStateChange(requested_state, obj);
+        }
+
+        protected void DrawGameObject(SpriteBatch batch, GameObject obj)
+        {
+            //if(GameObject
+            batch.Draw(obj.Sprite.Sprite, obj.Position - camera , obj.Sprite.Area, Color.White, obj.Rotation, obj.Origin, 1.0f, SpriteEffects.None, 0.0f); 
+
+        }
+
+        protected void LookAt(GameObject target)
+        {
+            //if(target != null)
+                camera = (target.Position + 0*  target.Origin) - Settings.DesiredResolution / 2;
         }
 
         public event ResourceRequestDelegate RequestingResources;

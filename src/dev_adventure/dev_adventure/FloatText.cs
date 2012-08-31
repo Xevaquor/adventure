@@ -29,19 +29,17 @@ namespace dev_adventure
         private Vector2 velocity = Vector2.Zero;             
         private LinkedList<FloatTextInstance> collection = null;
 
-        private float TIME_TO_LIVE = DevAdventure.FRAMES_PER_SECOND;
+        private float TIME_TO_LIVE = Settings.FramesPerSecond;
         
         /// <summary>
         /// Init quas-singleton. Has to be called after SpriteBatch created.
         /// </summary>
         /// <param name="batch"></param>
         /// <param name="spriteFont"></param>
-        public FloatText(SpriteBatch batch, SpriteFont spriteFont)
+        public FloatText(SpriteFont spriteFont)
         {
-            Debug.Assert(batch != null);
-            spriteBatch = batch;
             font = spriteFont;
-            velocity = new Vector2(0, -80.0f / DevAdventure.FRAMES_PER_SECOND);
+            velocity = new Vector2(0, -80.0f / Settings.FramesPerSecond);
             collection = new LinkedList<FloatTextInstance>();
         }
         /// <summary>
@@ -61,8 +59,9 @@ namespace dev_adventure
         /// <summary>
         /// Draw all floating texts.
         /// </summary>
-        public void DrawAll()
+        public void DrawAll(SpriteBatch batch)
         {
+            spriteBatch = batch;
             foreach (var item in collection)
             {
                 Draw(item);

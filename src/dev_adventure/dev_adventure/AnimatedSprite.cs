@@ -29,7 +29,7 @@ namespace dev_adventure
         Texture2D img;
         private Vector2 frameSize = Vector2.Zero;
         private Rectangle clipRectangle = new Rectangle();
-        
+
         /// <summary>
         /// Image for SpriteBatch
         /// </summary>
@@ -63,8 +63,14 @@ namespace dev_adventure
             frameSize.Y = tex.Height / rows;
 
             currentAnim = 0;
-            framesInAnim = anim_time * DevAdventure.FRAMES_PER_SECOND / frames_in_anim;
+            framesInAnim = anim_time * Settings.FramesPerSecond / frames_in_anim;
             animTime = frames_in_anim;
+
+            clipRectangle = new Rectangle(
+                (int)(currentFrame * frameSize.X),
+                (int)(currentAnim * frameSize.Y),
+                (int)frameSize.X,
+                (int)frameSize.Y);
         }
         /// <summary>
         /// Sets animation and resets frames counter

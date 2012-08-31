@@ -18,11 +18,6 @@ namespace dev_adventure
     /// </summary>
     public class DevAdventure : Microsoft.Xna.Framework.Game
     {
-        private static int frames_per_second = 30;
-        public static int FRAMES_PER_SECOND { get { return frames_per_second; } }
-
-        private Vector2 desiredResolution = new Vector2(1920, 1080);
-        private Vector2 realResolution = Vector2.Zero;
         private Matrix projectionMatrix = Matrix.Identity;
         private Viewport gameViewport = new Viewport();
 
@@ -36,16 +31,14 @@ namespace dev_adventure
         public static int Margin;
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-
-        Texture2D bugTex = null;
-
+        
         public DevAdventure()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
             this.IsFixedTimeStep = true;
-            this.TargetElapsedTime = TimeSpan.FromMilliseconds(1000 / FRAMES_PER_SECOND);
+            this.TargetElapsedTime = TimeSpan.FromMilliseconds(1000 / Settings.FramesPerSecond);
 
             this.IsMouseVisible = true;
 
@@ -66,44 +59,26 @@ namespace dev_adventure
 
         private void SetGraphicMode()
         {
-            bool fulscreen = false;
-            string[] args = Environment.GetCommandLineArgs();
-            try
-            {
-                frames_per_second = int.Parse(args[1]);
-                realResolution.X = int.Parse(args[2]);
-                realResolution.Y = int.Parse(args[3]);
-                fulscreen = bool.Parse(args[4]);
-            }
-            catch (Exception ex)
-            {
-                logger.Warn("Invalid arguments given. Setting to default.", realResolution.X, realResolution.Y, fulscreen);
-                realResolution.X = 1024;
-                realResolution.Y = 768;
-                fulscreen = false;
-                frames_per_second = 30;
-            }
-
-            graphics.PreferredBackBufferWidth = (int)realResolution.X;
-            graphics.PreferredBackBufferHeight = (int)realResolution.Y;
-            graphics.IsFullScreen = fulscreen;
+            graphics.PreferredBackBufferWidth = (int)Settings.Resolution.X;
+            graphics.PreferredBackBufferHeight = (int)Settings.Resolution.Y;
+            graphics.IsFullScreen = Settings.Fullscreen;
             graphics.ApplyChanges();
 
-            Window.Title = string.Format("{0}x{1}x{2}", realResolution.X, realResolution.Y, FRAMES_PER_SECOND);
+            Window.Title = string.Format("{0}x{1}x{2}", Settings.Resolution.X, Settings.Resolution.Y, Settings.FramesPerSecond);
 
-            float scale = realResolution.X / desiredResolution.X;
-            float aspect = desiredResolution.X / desiredResolution.Y;
-            float final_y = realResolution.X / aspect;
+            float scale = Settings.Resolution.X / Settings.DesiredResolution.X;
+            float aspect = Settings.DesiredResolution.X / Settings.DesiredResolution.Y;
+            float final_y = Settings.Resolution.X / aspect;
 
             Scale = scale;
 
 
-            int margin = (int)(Math.Abs(realResolution.Y - final_y) / 2);
-            gameViewport = new Viewport(0, margin, (int)realResolution.X, (int)final_y);
+            int margin = (int)(Math.Abs(Settings.Resolution.Y - final_y) / 2);
+            gameViewport = new Viewport(0, margin, (int)Settings.Resolution.X, (int)final_y);
             Margin = margin;
             projectionMatrix = Matrix.CreateScale(scale, scale, 1);
 
-            logger.Info("Created window {0}x{1} with {2} frames per second, windowed: {3}", realResolution.X, realResolution.Y, FRAMES_PER_SECOND, !fulscreen);
+            logger.Info("Created window {0}x{1} with {2} frames per second, windowed: {3}", Settings.Resolution.X, Settings.Resolution.Y, Settings.FramesPerSecond, !Settings.Fullscreen);
 
         }
         protected override void LoadContent()
@@ -116,6 +91,7 @@ namespace dev_adventure
 
             gameStates.Add("menu", new MenuGameState());
             gameStates.Add("pause", new PauseGameState());
+            gameStates.Add("demo", new DemoGameState());
 
 
             foreach (var item in gameStates)
@@ -124,14 +100,10 @@ namespace dev_adventure
                 item.Value.RequestingStateChange += new StateChangeRequestDelegate(Value_RequestingStateChange);
             }
 
-            currentState = "menu";
+            currentState = "demo";
 
             gameStates[currentState].Activate("default");
-
-            ResMan.LoadResource<Texture2D>("bug");
-            bugTex = ResMan.GetResource<Texture2D>("bug");
-
-        }
+                    }
 
 
         void Value_RequestingStateChange(string name, object obj)
@@ -224,53 +196,15 @@ namespace dev_adventure
             else
                 gameStates[currentState].Update();
 
-            bugOrigin = new Vector2(bugTex.Width / 2, bugTex.Height / 2);
-
-            if (InMan.KeyDown(Keys.Right))
-                bugAngle += 0.1f;
-            else if (InMan.KeyDown(Keys.Left))
-                bugAngle -= 0.1f;
-
-            int modifier = 0;
-            if (InMan.KeyDown(Keys.Up))
-                modifier--;
-            if (InMan.KeyDown(Keys.Down))
-                modifier++;
-
-            if (InMan.KeyDown(Keys.W))
-                camera.Y-= 10;
-            if(InMan.KeyDown(Keys.S))
-                camera.Y+= 10;
-            if (InMan.KeyDown(Keys.A))
-                camera.X-= 10;
-            if (InMan.KeyDown(Keys.D))
-                camera.X+= 10;
-
-            Vector2 v = new Vector2(-r * (float)Math.Sin(bugAngle), r * (float)Math.Cos(bugAngle)) * modifier;
-            bugPos += v;
-
-            relativePos = bugPos - camera;
-
-            camera = bugPos - desiredResolution / 2;
-
             base.Update(gameTime);
         }
 
         private int progress = 0;
 
-        Vector2 bugPos = new Vector2(120, 120) * 5;
-        float bugAngle = MathHelper.ToRadians(30f);
-        Vector2 bugOrigin = Vector2.Zero;
-        Vector2 camera = Vector2.Zero;
-        Vector2 relativePos = Vector2.Zero;
-        float r = 10f;
-
-
         protected override void Draw(GameTime gameTime)
         {
 
-
-            Viewport full_view = new Viewport(0, 0, (int)realResolution.X, (int)realResolution.Y);
+            Viewport full_view = new Viewport(0, 0, (int)Settings.Resolution.X, (int)Settings.Resolution.Y);
            // GraphicsDevice.Viewport = full_view;
             GraphicsDevice.Clear(Color.Black);
             try
@@ -282,7 +216,6 @@ namespace dev_adventure
                 ;//I really don't know waht's going on. It crashes when unminimizing
             }
 
-
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, projectionMatrix);
             if (IsBeingLoading)
             {
@@ -291,16 +224,6 @@ namespace dev_adventure
             else
             {
                 gameStates[currentState].Draw(spriteBatch);
-
-                spriteBatch.Draw(ResMan.GetResource<Texture2D>("checkboard"), Vector2.Zero - camera, Color.Red);
-
-                //spriteBatch.Draw(bugTex, bugPos, Color.White);
-                spriteBatch.Draw(bugTex, relativePos, null, Color.White, bugAngle, bugOrigin, 1.0f, SpriteEffects.None, 0);
-                spriteBatch.DrawString(ResMan.GetResource<SpriteFont>("default"), "Absolute bug pos: " + bugPos.ToString(), Vector2.Zero, Color.Purple);
-                spriteBatch.DrawString(ResMan.GetResource<SpriteFont>("default"), "Camera pos: " + camera.ToString(), new Vector2(0, 100), Color.Purple);
-                spriteBatch.DrawString(ResMan.GetResource<SpriteFont>("default"), "relative pos: " + relativePos.ToString(), new Vector2(0, 200), Color.Purple);
-
-                
             }
 
             spriteBatch.End();
