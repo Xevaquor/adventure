@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System.Diagnostics;
 
-namespace dev_adventure
+namespace DevAdventure
 {
     class FloatText
     {
@@ -24,10 +24,10 @@ namespace dev_adventure
             public Vector2 origin;
         }
 
-        private SpriteBatch spriteBatch = null;
+        private SpriteBatch spriteBatch;
         private SpriteFont font = null;
         private Vector2 velocity = Vector2.Zero;             
-        private LinkedList<FloatTextInstance> collection = null;
+        private LinkedList<FloatTextInstance> collection;
 
         private float TIME_TO_LIVE = Settings.FramesPerSecond;
         

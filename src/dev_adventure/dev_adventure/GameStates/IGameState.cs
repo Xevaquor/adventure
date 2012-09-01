@@ -10,16 +10,15 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace dev_adventure
+namespace DevAdventure
 {
-    public delegate void ResourceRequestDelegate(IEnumerable<ResMan.Asset> res_list);
-    public delegate void StateChangeRequestDelegate(string name, object obj);
+    delegate void ResourceRequestDelegate(IEnumerable<ResMan.Asset> res_list);
+    delegate void StateChangeRequestDelegate(string name, object obj);
 
     abstract class IGameState
     {
         protected HashSet<ResMan.Asset> requiredResources = new HashSet<ResMan.Asset>();
         protected Vector2 camera;
-        public int framesPerSecond = 1;
 
         public IGameState()
         {
@@ -34,7 +33,7 @@ namespace dev_adventure
 
         protected bool dirtyResources = true;
 
-        public abstract void Activate(object obj);
+        public abstract void Activate(object obj = null);
 
         protected bool HandleResources()
         {

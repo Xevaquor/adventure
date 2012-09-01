@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System.Diagnostics;
 
-namespace dev_adventure
+namespace DevAdventure
 {
     /// <summary>
     /// Animated sprite - generates part of image wchich contains frame animation.
@@ -19,9 +19,9 @@ namespace dev_adventure
     class AnimatedSprite
     {
         private Dictionary<string, int> animations = new Dictionary<string, int>();
-        private int currentAnim = 0;
-        private int currentFrame = 0;
-        private int frames = 0;
+        private int currentAnim;
+        private int currentFrame;
+        private int frames;
 
         private readonly int framesInAnim;
         private readonly int animTime;
@@ -62,7 +62,6 @@ namespace dev_adventure
             frameSize.X = tex.Width / cols;
             frameSize.Y = tex.Height / rows;
 
-            currentAnim = 0;
             framesInAnim = anim_time * Settings.FramesPerSecond / frames_in_anim;
             animTime = frames_in_anim;
 
@@ -72,6 +71,10 @@ namespace dev_adventure
                 (int)frameSize.X,
                 (int)frameSize.Y);
         }
+
+        public AnimatedSprite(Texture2D tex)
+            : this(tex, 1, 1, new string[] { "none" })
+        { }
         /// <summary>
         /// Sets animation and resets frames counter
         /// </summary>

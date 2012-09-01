@@ -11,20 +11,20 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System.Diagnostics;
 
-namespace dev_adventure
+namespace DevAdventure
 {
     static class InMan
     {
         private static MouseState mouseState, prevMouseState;
-        private static KeyboardState keySate, prevKeyState;
+        private static KeyboardState keyState, prevKeyState;
 
         public static void Update()
         {
             prevMouseState = mouseState;
             mouseState = Mouse.GetState();
 
-            prevKeyState = keySate;
-            keySate = Keyboard.GetState();
+            prevKeyState = keyState;
+            keyState = Keyboard.GetState();
         }
 
         public static bool LeftDown
@@ -41,7 +41,11 @@ namespace dev_adventure
 
         public static bool KeyDown(Keys key)
         {
-            return keySate.IsKeyDown(key);
+            return keyState.IsKeyDown(key);
+        }
+        public static bool KeyPressed(Keys key)
+        {
+            return keyState.IsKeyDown(key) && prevKeyState.IsKeyUp(key);
         }
 
         public static Vector2 MousePosition

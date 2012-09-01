@@ -10,12 +10,12 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace dev_adventure
+namespace DevAdventure
 {
     class MenuGameState : IGameState
     {
         Vector2 pos = Vector2.Zero;
-        private SpriteFont fontType = null;
+        private SpriteFont fontType;
         string fontName = "default";
         string msg = "MENU";
         Texture2D checkboard;

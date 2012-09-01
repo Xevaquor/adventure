@@ -1,15 +1,13 @@
 using System;
 
-namespace dev_adventure
+namespace DevAdventure
 {
 #if WINDOWS || XBOX
     static class Program
     {
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-        static void Main(string[] args)
+        [STAThread]
+        static void Main()
         {
             try
             {

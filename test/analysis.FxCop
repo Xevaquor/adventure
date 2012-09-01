@@ -1,0 +1,390 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FxCopProject Version="1.36" Name="Dev Adventure static analysis">
+ <ProjectOptions>
+  <SharedProject>True</SharedProject>
+  <Stylesheet Apply="False">c:\program files (x86)\microsoft fxcop 1.36\Xml\FxCopReport.xsl</Stylesheet>
+  <SaveMessages>
+   <Project Status="Active, Excluded" NewOnly="False" />
+   <Report Status="Active" NewOnly="False" />
+  </SaveMessages>
+  <ProjectFile Compress="True" DefaultTargetCheck="True" DefaultRuleCheck="True" SaveByRuleGroup="" Deterministic="True" />
+  <EnableMultithreadedLoad>True</EnableMultithreadedLoad>
+  <EnableMultithreadedAnalysis>True</EnableMultithreadedAnalysis>
+  <SourceLookup>True</SourceLookup>
+  <AnalysisExceptionsThreshold>10</AnalysisExceptionsThreshold>
+  <RuleExceptionsThreshold>1</RuleExceptionsThreshold>
+  <Spelling Locale="en-US" />
+  <OverrideRuleVisibilities>False</OverrideRuleVisibilities>
+  <CustomDictionaries SearchFxCopDir="True" SearchUserProfile="True" SearchProjectDir="True" />
+  <SearchGlobalAssemblyCache>True</SearchGlobalAssemblyCache>
+  <DeadlockDetectionTimeout>120</DeadlockDetectionTimeout>
+  <IgnoreGeneratedCode>False</IgnoreGeneratedCode>
+ </ProjectOptions>
+ <Targets>
+  <AssemblyReferenceDirectories>
+   <Directory>C:/Program Files (x86)/Microsoft XNA/XNA Game Studio/v4.0/References/Windows/x86/</Directory>
+  </AssemblyReferenceDirectories>
+  <Target Name="$(ProjectDir)/../src/dev_adventure/dev_adventure/bin/x86/Debug/DevAdventure.exe" Analyze="True" AnalyzeAllChildren="True" />
+ </Targets>
+ <Rules>
+  <RuleFiles>
+   <RuleFile Name="$(FxCopDir)\Rules\DesignRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\GlobalizationRules.dll" Enabled="True" AllRulesEnabled="False">
+    <Rule Name="AvoidDuplicateAccelerators" Enabled="True" />
+    <Rule Name="DoNotHardcodeLocaleSpecificStrings" Enabled="True" />
+    <Rule Name="NormalizeStringsToUppercase" Enabled="True" />
+    <Rule Name="SetLocaleForDataTypes" Enabled="True" />
+    <Rule Name="SpecifyCultureInfo" Enabled="True" />
+    <Rule Name="SpecifyMarshalingForPInvokeStringArguments" Enabled="True" />
+    <Rule Name="SpecifyMessageBoxOptions" Enabled="True" />
+    <Rule Name="SpecifyStringComparison" Enabled="True" />
+    <Rule Name="UseOrdinalStringComparison" Enabled="True" />
+   </RuleFile>
+   <RuleFile Name="$(FxCopDir)\Rules\InteroperabilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\MobilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\NamingRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\PerformanceRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\PortabilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\SecurityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\UsageRules.dll" Enabled="True" AllRulesEnabled="True" />
+  </RuleFiles>
+  <Groups />
+  <Settings />
+ </Rules>
+ <FxCopReport Version="1.36">
+  <Targets>
+   <Target Name="$(ProjectDir)/../src/dev_adventure/dev_adventure/bin/x86/Debug/DevAdventure.exe">
+    <Modules>
+     <Module Name="devadventure.exe">
+      <Namespaces>
+       <Namespace Name="DevAdventure">
+        <Types>
+         <Type Name="AnimatedSprite">
+          <Members>
+           <Member Name="#SetAnim(System.String)">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2012-09-01 14:47:33Z">
+              <Issue>
+               <Item>'AnimatedSprite.SetAnim(string)'</Item>
+              </Issue>
+              <Notes>
+               <User Name="Xev">
+                <Note Id="9" />
+               </User>
+              </Notes>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Update()">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2012-09-01 14:47:33Z">
+              <Issue>
+               <Item>'AnimatedSprite.Update()'</Item>
+              </Issue>
+              <Notes>
+               <User Name="Xev">
+                <Note Id="9" />
+               </User>
+              </Notes>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="DevAdventure">
+          <Members>
+           <Member Name="#.ctor()">
+            <Messages>
+             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Status="Excluded" Created="2012-09-01 14:47:33Z">
+              <Issue>
+               <Item>'DevAdventure.DevAdventure()'</Item>
+               <Item>'DevAdventure.IsBeingLoading'</Item>
+               <Item>'bool'</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>'DevAdventure.DevAdventure()'</Item>
+               <Item>'DevAdventure.progress'</Item>
+               <Item>'int'</Item>
+               <Item>0</Item>
+              </Issue>
+              <Notes>
+               <User Name="Xev">
+                <Note Id="6" />
+               </User>
+              </Notes>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Draw(Microsoft.Xna.Framework.GameTime)">
+            <Messages>
+             <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Status="Excluded" Created="2012-09-01 14:47:33Z">
+              <Issue>
+               <Item>'DevAdventure.Draw(GameTime)'</Item>
+               <Item>'object'</Item>
+              </Issue>
+              <Notes>
+               <User Name="Xev">
+                <Note Id="0" />
+               </User>
+              </Notes>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="GameObject">
+          <Members>
+           <Member Name="#Update()">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2012-09-01 14:47:33Z">
+              <Issue>
+               <Item>'GameObject.Update()'</Item>
+              </Issue>
+              <Notes>
+               <User Name="Xev">
+                <Note Id="9" />
+               </User>
+              </Notes>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="InMan">
+          <Members>
+           <Member Name="#KeyPressed(Microsoft.Xna.Framework.Input.Keys)">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2012-09-01 15:21:52Z">
+              <Issue>
+               <Item>'InMan.KeyPressed(Keys)'</Item>
+              </Issue>
+              <Notes>
+               <User Name="Xev">
+                <Note Id="9" />
+               </User>
+              </Notes>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#RightDown">
+            <Accessors>
+             <Accessor Name="#get_RightDown()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2012-09-01 14:47:33Z">
+                <Issue>
+                 <Item>'InMan.RightDown.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="Xev">
+                  <Note Id="9" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#RightPressed">
+            <Accessors>
+             <Accessor Name="#get_RightPressed()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2012-09-01 14:47:33Z">
+                <Issue>
+                 <Item>'InMan.RightPressed.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="Xev">
+                  <Note Id="9" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="MenuGameState">
+          <Messages>
+           <Message TypeName="AvoidUninstantiatedInternalClasses" Category="Microsoft.Performance" CheckId="CA1812" Status="Excluded" Created="2012-09-01 14:47:33Z">
+            <Issue>
+             <Item>'MenuGameState'</Item>
+            </Issue>
+            <Notes>
+             <User Name="Xev">
+              <Note Id="8" />
+             </User>
+            </Notes>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#Activate(System.Object)">
+            <Messages>
+             <Message TypeName="DoNotCastUnnecessarily" Category="Microsoft.Performance" CheckId="CA1800" Status="Excluded" Created="2012-09-01 14:47:33Z">
+              <Issue Name="Parameter">
+               <Item>'obj'</Item>
+               <Item>'string'</Item>
+               <Item>'MenuGameState.Activate(object)'</Item>
+               <Item>isint</Item>
+              </Issue>
+              <Notes>
+               <User Name="Xev">
+                <Note Id="5" />
+               </User>
+              </Notes>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="PauseGameState">
+          <Messages>
+           <Message TypeName="AvoidUninstantiatedInternalClasses" Category="Microsoft.Performance" CheckId="CA1812" Status="Excluded" Created="2012-09-01 14:47:33Z">
+            <Issue>
+             <Item>'PauseGameState'</Item>
+            </Issue>
+            <Notes>
+             <User Name="Xev">
+              <Note Id="7" />
+             </User>
+            </Notes>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#Activate(System.Object)">
+            <Messages>
+             <Message TypeName="DoNotCastUnnecessarily" Category="Microsoft.Performance" CheckId="CA1800" Status="Excluded" Created="2012-09-01 14:47:33Z">
+              <Issue Name="Parameter">
+               <Item>'obj'</Item>
+               <Item>'string'</Item>
+               <Item>'PauseGameState.Activate(object)'</Item>
+               <Item>isint</Item>
+              </Issue>
+              <Notes>
+               <User Name="Xev">
+                <Note Id="4" />
+               </User>
+              </Notes>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="Program">
+          <Members>
+           <Member Name="#Main()">
+            <Messages>
+             <Message TypeName="SpecifyMessageBoxOptions" Category="Microsoft.Globalization" CheckId="CA1300" Status="Excluded" Created="2012-09-01 15:10:23Z">
+              <Issue>
+               <Item>'Program.Main()'</Item>
+              </Issue>
+              <Notes>
+               <User Name="Xev">
+                <Note Id="3" />
+               </User>
+              </Notes>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="ResMan">
+          <Members>
+           <Member Name="#NewTexture2D(System.String)">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2012-09-01 14:53:01Z">
+              <Issue>
+               <Item>'ResMan.NewTexture2D(string)'</Item>
+              </Issue>
+              <Notes>
+               <User Name="Xev">
+                <Note Id="9" />
+               </User>
+              </Notes>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="Settings">
+          <Members>
+           <Member Name="#.cctor()">
+            <Messages>
+             <Message TypeName="InitializeReferenceTypeStaticFieldsInline" Category="Microsoft.Performance" CheckId="CA1810" Status="Excluded" Created="2012-09-01 14:47:33Z">
+              <Issue>
+               <Item>'Settings'</Item>
+              </Issue>
+              <Notes>
+               <User Name="Xev">
+                <Note Id="2" />
+               </User>
+              </Notes>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#FrameTime">
+            <Accessors>
+             <Accessor Name="#get_FrameTime()">
+              <Messages>
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Status="Excluded" Created="2012-09-01 14:47:33Z">
+                <Issue>
+                 <Item>'Settings.FrameTime.get()'</Item>
+                </Issue>
+                <Notes>
+                 <User Name="Xev">
+                  <Note Id="9" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+      </Namespaces>
+     </Module>
+    </Modules>
+   </Target>
+  </Targets>
+  <Notes>
+   <User Name="Xev">
+    <Note Id="0" Modified="2012-09-01 14:59:57Z">Sometimes when unminimizing Exception is throwed. I don't remember what Exception.</Note>
+    <Note Id="2" Modified="2012-09-01 15:09:42Z">Impossible.</Note>
+    <Note Id="3" Modified="2012-09-01 15:11:45Z">Niggling</Note>
+    <Note Id="4" Modified="2012-09-01 15:12:34Z">File is about to delete.</Note>
+    <Note Id="5" Modified="2012-09-01 15:13:37Z">File is about to delete.</Note>
+    <Note Id="6" Modified="2012-09-01 15:17:08Z">Readability.</Note>
+    <Note Id="7" Modified="2012-09-01 15:22:49Z">File is about to delete.</Note>
+    <Note Id="8" Modified="2012-09-01 15:23:19Z">File is about to delete.</Note>
+    <Note Id="9" Modified="2012-09-01 15:29:14Z">Using code will appear soon.</Note>
+   </User>
+  </Notes>
+  <Rules>
+   <Rule TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811">
+    <Resolution Name="Default">{0} appears to have no upstream public or protected callers.</Resolution>
+   </Rule>
+   <Rule TypeName="AvoidUninstantiatedInternalClasses" Category="Microsoft.Performance" CheckId="CA1812">
+    <Resolution Name="Default">{0} is an internal class that is apparently never instantiated. If so, remove the code from the assembly. If this class is intended to contain only static methods, consider adding a private constructor to prevent the compiler from generating a default constructor.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotCastUnnecessarily" Category="Microsoft.Performance" CheckId="CA1800">
+    <Resolution Name="Parameter">{0}, a parameter, is cast to type {1} multiple times in method {2}. Cache the result of the 'as' operator or direct cast in order to eliminate the redundant {3} instruction.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031">
+    <Resolution Name="Default">Modify {0} to catch a more specific exception than {1} or rethrow the exception.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805">
+    <Resolution Name="Default">{0} initializes field {1} of type {2} to {3}. Remove this initialization because it will be done automatically by the runtime.</Resolution>
+   </Rule>
+   <Rule TypeName="InitializeReferenceTypeStaticFieldsInline" Category="Microsoft.Performance" CheckId="CA1810">
+    <Resolution Name="Default">Initialize all static fields in {0} when those fields are declared and remove the explicit static constructor.</Resolution>
+   </Rule>
+   <Rule TypeName="SpecifyMessageBoxOptions" Category="Microsoft.Globalization" CheckId="CA1300">
+    <Resolution Name="Default">Change {0} to call the MessageBox.Show overload that specifies MessageBoxOptions, and make sure to set MessageBoxOptions.RightAlign and MessageBoxOptions.RtlReading if RightToLeft is set to RightToLeft.Yes on the parent control.</Resolution>
+   </Rule>
+  </Rules>
+ </FxCopReport>
+</FxCopProject>

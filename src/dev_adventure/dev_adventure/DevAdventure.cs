@@ -11,17 +11,17 @@ using Microsoft.Xna.Framework.Media;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace dev_adventure
+namespace DevAdventure
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class DevAdventure : Microsoft.Xna.Framework.Game
+    class DevAdventure : Microsoft.Xna.Framework.Game
     {
         private Matrix projectionMatrix = Matrix.Identity;
         private Viewport gameViewport = new Viewport();
 
-        private Dictionary<string, IGameState> gameStates = null;
+        private Dictionary<string, IGameState> gameStates;
         private string currentState, previousState;
 
         GraphicsDeviceManager graphics;
@@ -31,7 +31,7 @@ namespace dev_adventure
         public static int Margin;
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        
+
         public DevAdventure()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -88,11 +88,7 @@ namespace dev_adventure
             ResMan.LoadDefaultContent();
             gameStates = new Dictionary<string, IGameState>();
 
-
-            gameStates.Add("menu", new MenuGameState());
-            gameStates.Add("pause", new PauseGameState());
             gameStates.Add("demo", new DemoGameState());
-
 
             foreach (var item in gameStates)
             {
@@ -102,8 +98,8 @@ namespace dev_adventure
 
             currentState = "demo";
 
-            gameStates[currentState].Activate("default");
-                    }
+            gameStates[currentState].Activate();
+        }
 
 
         void Value_RequestingStateChange(string name, object obj)
@@ -121,20 +117,17 @@ namespace dev_adventure
 
         }
 
-        private string caller = "";
         bool IsBeingLoading = false;
         Task async;
 
         void Value_RequestingResources(IEnumerable<ResMan.Asset> res_list)
         {
-            caller = currentState;
             IsBeingLoading = true;
 
             Action<object> omg = LoadResourcesAsync;
             async = new Task(omg, res_list);
             async.Start();
 
-            //LoadResourcesAsync(res_list);
         }
 
         private void LoadResourcesAsync(object res_list)
@@ -161,14 +154,13 @@ namespace dev_adventure
 
                 }
             }
-            catch
+            catch(ContentLoadException ex)
             {
+                logger.Error("Error while loading resources: {0}", ex.Message);
                 return;
             }
         }
-
-       
-
+        
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
         /// all content.
@@ -177,9 +169,7 @@ namespace dev_adventure
         {
 
         }
-
-        Random rnd = new Random();
-
+        
         protected override void Update(GameTime gameTime)
         {
             InMan.Update();
@@ -205,7 +195,7 @@ namespace dev_adventure
         {
 
             Viewport full_view = new Viewport(0, 0, (int)Settings.Resolution.X, (int)Settings.Resolution.Y);
-           // GraphicsDevice.Viewport = full_view;
+            // GraphicsDevice.Viewport = full_view;
             GraphicsDevice.Clear(Color.Black);
             try
             {

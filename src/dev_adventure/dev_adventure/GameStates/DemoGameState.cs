@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace dev_adventure
+namespace DevAdventure
 {
     class DemoGameState : IGameState
     {
@@ -55,8 +55,8 @@ namespace dev_adventure
 
         protected override void AssignResources()
         {
-            bug = new GameObject(new AnimatedSprite(ResMan.GetResource<Texture2D>("bug"), 1,1,new string[] {"none"}), Vector2.Zero, 0.0f);
-            bg = new GameObject(new AnimatedSprite(ResMan.GetResource <Texture2D>("checkboard"), 1, 1, new string[] { "none" }), Vector2.Zero, 0.0f);
+            bug = new GameObject(new AnimatedSprite(ResMan.Get<Texture2D>("bug")), Vector2.Zero);
+            bg = new GameObject(new AnimatedSprite(ResMan.Get<Texture2D>("checkboard")), Vector2.Zero);
             floatingText = new FloatText(ResMan.GetResource<SpriteFont>("default"));
         }
 

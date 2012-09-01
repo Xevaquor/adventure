@@ -11,9 +11,9 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System.Diagnostics;
 
-namespace dev_adventure
+namespace DevAdventure
 {
-    public static class ResMan
+    static class ResMan
     {
         public struct Asset
         {
@@ -22,10 +22,15 @@ namespace dev_adventure
             public AssetType Type;
         }
 
-        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        private static ContentManager loader = null;
+        public static Asset NewTexture2D(string name)
+        {
+            return new Asset() { Name = name, Type = Asset.AssetType.TEXTURE_2D };
+        }
 
-        private static Dictionary<string, object> assets = null;
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private static ContentManager loader;
+
+        private static Dictionary<string, object> assets;
 
         public static void Create(ContentManager content)
         {
@@ -40,6 +45,11 @@ namespace dev_adventure
             LoadResource<SpriteFont>("default");
 
             logger.Info("Default content loaded");
+        }
+
+        public static T Get<T>(string name)
+        {
+            return GetResource<T>(name);
         }
 
         public static T GetResource<T>(string name)

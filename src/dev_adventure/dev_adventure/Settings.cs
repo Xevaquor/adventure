@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace dev_adventure
+namespace DevAdventure
 {
     /// <summary>
     /// Ne tak miało wyglądać moje życie ale .settings nie ma zamiaru działać a ja nie mam czasu zeby się z tym użerać :/
@@ -25,22 +25,31 @@ namespace dev_adventure
         public static Vector2 DesiredResolution { get; private set; }
         public static float FrameTime { get; private set; }
 
+        private static void SetDefault()
+        {
+            FramesPerSecond = 30;
+            Resolution = new Vector2(1024, 768);
+            Fullscreen = false;
+            logger.Warn("Invalid arguments given. Setting to default.", Resolution.X, Resolution.Y, Fullscreen);
+        }
         static Settings()
         {
             DesiredResolution = new Vector2(1920,1080);
             string[] args = Environment.GetCommandLineArgs();
+            
             try
             {
                 FramesPerSecond = int.Parse(args[1]);
                 Resolution = new Vector2(int.Parse(args[2]), int.Parse(args[3]));
                 Fullscreen = bool.Parse(args[4]);
             }
-            catch
+            catch (ArgumentNullException)
             {
-                FramesPerSecond = 30;
-                Resolution = new Vector2(1024, 768);
-                Fullscreen = false;
-                logger.Warn("Invalid arguments given. Setting to default.", Resolution.X, Resolution.Y, Fullscreen);
+                SetDefault();
+            }
+            catch (FormatException)
+            {
+                SetDefault();
             }
 
             FrameTime = 1.0f / FramesPerSecond;
