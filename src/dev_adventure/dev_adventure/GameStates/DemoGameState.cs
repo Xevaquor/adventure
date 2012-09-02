@@ -31,8 +31,7 @@ namespace DevAdventure
 
         public DemoGameState()
         {
-            //TODO: ResMan.AddTeture2D
-            requiredResources.Add(new ResMan.Asset() { Name = "bug", Type = ResMan.Asset.AssetType.TEXTURE_2D });
+            requiredResources.Add(new ResMan.Asset() { Name = "bug2", Type = ResMan.Asset.AssetType.TEXTURE_2D });
             requiredResources.Add(new ResMan.Asset() { Name = "checkboard", Type = ResMan.Asset.AssetType.TEXTURE_2D });
             requiredResources.Add(ResMan.NewTexture2D("stone"));
 
@@ -47,8 +46,8 @@ namespace DevAdventure
             DrawGameObject(batch, bug);
             DrawGameObject(batch, feature);
             
-            batch.DrawString(ResMan.Get<SpriteFont>("default"), feature.Position.ToString(), Vector2.Zero, Color.Red);
-            batch.DrawString(ResMan.Get<SpriteFont>("default"), feature.PhysicsBody.Position.ToString(), new Vector2(0,100), Color.Red);
+            batch.DrawString(ResMan.Get<SpriteFont>("default"), bug.Position.ToString(), Vector2.Zero, Color.Red);
+            batch.DrawString(ResMan.Get<SpriteFont>("default"), bug.PhysicsBody.Position.ToString(), new Vector2(0,100), Color.Red);
             
             floatingText.DrawAll(batch);
         }
@@ -94,8 +93,8 @@ namespace DevAdventure
             */
             stone = GameObject.CreateCircular(new AnimatedSprite(ResMan.Get<Texture2D>("stone")), new Vector2(-0, -0), BodyType.Static, 180);
             bg = GameObject.CreateNonPhysics(new AnimatedSprite(ResMan.Get<Texture2D>("checkboard")), new Vector2(0, 0));
-            bug = GameObject.CreateRectangular(new AnimatedSprite(ResMan.Get<Texture2D>("bug")), new Vector2(500, 500), BodyType.Dynamic);
-            feature = GameObject.CreateRectangular(new AnimatedSprite(ResMan.Get<Texture2D>("bug")), new Vector2(-300, -300), BodyType.Dynamic);
+            bug = GameObject.CreateRectangular(new AnimatedSprite(ResMan.Get<Texture2D>("bug2"),4,1,"walk"), new Vector2(500, 500), BodyType.Dynamic);
+            feature = GameObject.CreateRectangular(new AnimatedSprite(ResMan.Get<Texture2D>("bug2"),4,1, "walk"), new Vector2(-300, -300), BodyType.Dynamic);
 
             floatingText = new FloatText(ResMan.GetResource<SpriteFont>("default"));
           //  bug.PhysicsBody.OnCollision += new OnCollisionEventHandler(PhysicsBody_OnCollision);

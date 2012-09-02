@@ -86,10 +86,10 @@ namespace DevAdventure
         }
         public void MoveStraight(float distance)
         {
-            
+          //  distance /= Settings.FramesPerSecond;
             Vector2 vel = new Vector2((float)(distance * Math.Sin(Rotation)), (float)(-distance * Math.Cos(Rotation)));
-            vel /= Settings.FramesPerSecond;
-            PhysicsBody.LinearVelocity = vel;
+            //vel /= Settings.FramesPerSecond;
+            PhysicsBody.LinearVelocity = ConvertUnits.ToSimUnits(vel);
              
 
            // PhysicsBody.LinearVelocity = new Vector2(0, 1);
