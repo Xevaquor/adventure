@@ -18,30 +18,50 @@ namespace DevAdventure
 {
     class GameObject
     {
-        public Vector2 Position;
+        /// <summary>
+        /// Position in game units. Autoassign physics units.
+        /// </summary>
+        public Vector2 Position
+        {
+            get { return ConvertUnits.ToDisplayUnits(PhysicsBody.Position); }
+            set { PhysicsBody.Position = ConvertUnits.ToSimUnits(value); }
+        }
         /// <summary>
         /// In radians
         /// </summary>
-        public float Rotation;
-        public Vector2 Velocity;
+        public float Rotation
+        {
+            get { return PhysicsBody.Rotation; }
+            set { PhysicsBody.Rotation = value; }
+        }
+        public float DegreesRotation
+        {
+            get { return MathHelper.ToDegrees(Rotation); }
+            set { Rotation = MathHelper.ToRadians(value); }
+        }
+       // public Vector2 Velocity;
         public Vector2 Origin;
+
+        public Vector2 Size { get { return new Vector2(Sprite.Area.Width, Sprite.Area.Height); } }
 
         public AnimatedSprite Sprite;
 
         public Body PhysicsBody;
         public Fixture PhysicsFixture;
-        
-        public GameObject(AnimatedSprite animated_sprite, Vector2 pos, float rot, Vector2 ori, Vector2 vel, Body body)
+
+        internal static World World;
+
+        public GameObject(AnimatedSprite animated_sprite, Vector2 pos, float rot, Vector2 ori, Vector2 vel)
         {
+            PhysicsBody = BodyFactory.CreateBody(World);
             Sprite = animated_sprite;
             Position = pos;
             Rotation = rot;
-            Velocity = vel;
+            PhysicsBody.Rotation = Rotation;
             Origin = ori;
-            PhysicsBody = body;
         }
         public GameObject(AnimatedSprite animated_sprite, Vector2 pos, float rot = 0.0f)
-            : this(animated_sprite, pos, rot, Vector2.Zero, Vector2.Zero, null)
+            : this(animated_sprite, pos, rot, Vector2.Zero, Vector2.Zero)
         {
             Origin = new Vector2(Sprite.Area.Width / 2, Sprite.Area.Height / 2);
         }
@@ -51,10 +71,7 @@ namespace DevAdventure
         /// </summary>
         public void Update()
         {
-            Position += Velocity / Settings.FramesPerSecond;
             Sprite.Update();
-            Position = ConvertUnits.ToDisplayUnits(PhysicsBody.Position);
-            Rotation = PhysicsBody.Rotation;
             PhysicsBody.LinearVelocity = Vector2.Zero;
             PhysicsBody.AngularVelocity = 0;
         }
@@ -69,9 +86,54 @@ namespace DevAdventure
         }
         public void MoveStraight(float distance)
         {
-            Vector2 vel = new Vector2((float) (distance * Math.Sin(Rotation)),(float) (-distance * Math.Cos(Rotation)));
+            
+            Vector2 vel = new Vector2((float)(distance * Math.Sin(Rotation)), (float)(-distance * Math.Cos(Rotation)));
             vel /= Settings.FramesPerSecond;
             PhysicsBody.LinearVelocity = vel;
+             
+
+           // PhysicsBody.LinearVelocity = new Vector2(0, 1);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tex">Sprite</param>
+        /// <param name="pos">Postion</param>
+        /// <param name="angle">Angle in radians</param>
+        /// <returns></returns>
+        internal static GameObject CreateCircular(AnimatedSprite sprite, Vector2 pos, BodyType type = BodyType.Static, float angle = 0f)
+        {
+            GameObject obj = new GameObject(sprite, pos, angle);
+            obj.PhysicsBody.CreateFixture(new CircleShape(ConvertUnits.ToSimUnits(obj.Size.X / 2), 0));
+            obj.PhysicsBody.BodyType = type;
+            return obj;
+        }
+
+        internal static GameObject CreateNonPhysics(AnimatedSprite sprite, Vector2 pos, float angle = 0f)
+        {
+            GameObject obj = new GameObject(sprite, pos, angle);
+            //obj.PhysicsBody.IsSensor = true;
+            return obj;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sprite"></param>
+        /// <param name="pos"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        internal static GameObject CreateRectangular(AnimatedSprite sprite, Vector2 pos, BodyType type)
+        {
+            GameObject obj = new GameObject(sprite, pos);
+            var q = new PolygonShape(1);
+            q.SetAsBox(ConvertUnits.ToSimUnits(obj.Size.X / 2),
+                ConvertUnits.ToSimUnits(obj.Size.Y / 2));
+
+            obj.PhysicsBody.CreateFixture(q);
+            obj.PhysicsBody.BodyType = type;
+            return obj;
+        }
+
     }
 }

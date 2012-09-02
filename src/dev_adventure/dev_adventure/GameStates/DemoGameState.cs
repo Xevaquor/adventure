@@ -22,6 +22,7 @@ namespace DevAdventure
         private GameObject bug;
         private GameObject bg;
         private GameObject feature;
+        private GameObject stone;
 
         private FloatText floatingText;
 
@@ -33,18 +34,22 @@ namespace DevAdventure
             //TODO: ResMan.AddTeture2D
             requiredResources.Add(new ResMan.Asset() { Name = "bug", Type = ResMan.Asset.AssetType.TEXTURE_2D });
             requiredResources.Add(new ResMan.Asset() { Name = "checkboard", Type = ResMan.Asset.AssetType.TEXTURE_2D });
+            requiredResources.Add(ResMan.NewTexture2D("stone"));
 
         }
 
         public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch batch)
         {
+           /*rawGameObject(batch, bg);
+            DrawGameObject(batch, bug);*/
             DrawGameObject(batch, bg);
+            DrawGameObject(batch, stone);
             DrawGameObject(batch, bug);
             DrawGameObject(batch, feature);
-
-            batch.DrawString(ResMan.Get<SpriteFont>("default"), bug.Position.ToString(), Vector2.Zero, Color.Red);
+            
             batch.DrawString(ResMan.Get<SpriteFont>("default"), feature.Position.ToString(), Vector2.Zero, Color.Red);
-
+            batch.DrawString(ResMan.Get<SpriteFont>("default"), feature.PhysicsBody.Position.ToString(), new Vector2(0,100), Color.Red);
+            
             floatingText.DrawAll(batch);
         }
 
@@ -65,9 +70,10 @@ namespace DevAdventure
             }
 
             world.Step(Settings.FrameTime);
-
-            bug.Update();
             feature.Update();
+            stone.Update();
+            bg.Update();
+            bug.Update();
 
             floatingText.UpdateAll();
             LookAt(bug);
@@ -75,31 +81,24 @@ namespace DevAdventure
 
         protected override void AssignResources()
         {
-            // bug = new GameObject(new AnimatedSprite(ResMan.Get<Texture2D>("bug")), Vector2.Zero);
-            bg = new GameObject(new AnimatedSprite(ResMan.Get<Texture2D>("checkboard")), Vector2.Zero);
-            floatingText = new FloatText(ResMan.GetResource<SpriteFont>("default"));
-
             world = new World(Vector2.Zero);
+            GameObject.World = world;
+            // bug = new GameObject(new AnimatedSprite(ResMan.Get<Texture2D>("bug")), Vector2.Zero);
+         /*   bg = new GameObject(new AnimatedSprite(ResMan.Get<Texture2D>("checkboard")), Vector2.Zero);
+
             bug = CreatePhysicsObject(new AnimatedSprite(ResMan.Get<Texture2D>("bug")), Vector2.Zero);
             feature = CreatePhysicsObject(new AnimatedSprite(ResMan.Get<Texture2D>("bug")), new Vector2(400, 400));
 
             bug.PhysicsBody.Mass = 5;
             feature.PhysicsBody.Mass = 10;
+            */
+            stone = GameObject.CreateCircular(new AnimatedSprite(ResMan.Get<Texture2D>("stone")), new Vector2(-0, -0), BodyType.Static, 180);
+            bg = GameObject.CreateNonPhysics(new AnimatedSprite(ResMan.Get<Texture2D>("checkboard")), new Vector2(0, 0));
+            bug = GameObject.CreateRectangular(new AnimatedSprite(ResMan.Get<Texture2D>("bug")), new Vector2(500, 500), BodyType.Dynamic);
+            feature = GameObject.CreateRectangular(new AnimatedSprite(ResMan.Get<Texture2D>("bug")), new Vector2(-300, -300), BodyType.Dynamic);
 
-            bug.PhysicsBody.OnCollision += new OnCollisionEventHandler(PhysicsBody_OnCollision);
-            /*
-            var bounds = new Vertices(4);
-            bounds.Add(ConvertUnits.ToSimUnits(new Vector2(-500, -500)));
-            bounds.Add(ConvertUnits.ToSimUnits(new Vector2(1920, 0)));
-            bounds.Add(ConvertUnits.ToSimUnits(new Vector2(1920, 1080)));
-            bounds.Add(ConvertUnits.ToSimUnits(new Vector2(0, 1080)));*/
-            /*
-            boundary = new Body(world);
-            boundary.CreateFixture(new CircleShape(ConvertUnits.ToSimUnits(10), 0));
-            boundary.Position = ConvertUnits.ToSimUnits(new Vector2(400, 400));
-          /*  boundary.CollisionCategories = Category.All;
-            boundary.CollidesWith = Category.All;
-            boundary.BodyType = BodyType.Dynamic;*/
+            floatingText = new FloatText(ResMan.GetResource<SpriteFont>("default"));
+          //  bug.PhysicsBody.OnCollision += new OnCollisionEventHandler(PhysicsBody_OnCollision);
         }
 
         bool PhysicsBody_OnCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)

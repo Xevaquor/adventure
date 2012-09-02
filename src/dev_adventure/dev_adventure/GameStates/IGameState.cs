@@ -76,8 +76,10 @@ namespace DevAdventure
 
         protected void LookAt(GameObject target)
         {
-            //if(target != null)
-                camera = (target.Position + 0*  target.Origin) - Settings.DesiredResolution / 2;
+            if (target != null)
+                camera = (target.Position + 0 * target.Origin) - Settings.DesiredResolution / 2;
+            else
+                camera = Vector2.Zero;
         }
 
         public event ResourceRequestDelegate RequestingResources;
