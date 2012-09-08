@@ -36,7 +36,7 @@ namespace DevAdventure
         {
             DesiredResolution = new Vector2(1920,1080);
             string[] args = Environment.GetCommandLineArgs();
-            
+
             try
             {
                 FramesPerSecond = int.Parse(args[1]);
@@ -48,6 +48,10 @@ namespace DevAdventure
                 SetDefault();
             }
             catch (FormatException)
+            {
+                SetDefault();
+            }
+            catch (IndexOutOfRangeException)
             {
                 SetDefault();
             }

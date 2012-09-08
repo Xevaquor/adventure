@@ -126,6 +126,7 @@
     <Compile Include="GameStates\MenuGameState.cs" />
     <Compile Include="GameStates\PauseGameState.cs" />
     <Compile Include="InMan.cs" />
+    <Compile Include="Level.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="DevAdventure.cs" />

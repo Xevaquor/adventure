@@ -27,21 +27,30 @@ namespace DevAdventure
         private FloatText floatingText;
 
         World world = new World(Vector2.Zero);
-        Body boundary;
+
+        Level level;
 
         public DemoGameState()
         {
             requiredResources.Add(new ResMan.Asset() { Name = "bug2", Type = ResMan.Asset.AssetType.TEXTURE_2D });
             requiredResources.Add(new ResMan.Asset() { Name = "checkboard", Type = ResMan.Asset.AssetType.TEXTURE_2D });
             requiredResources.Add(ResMan.NewTexture2D("stone"));
-
+            requiredResources.Add(ResMan.NewTexture2D("bg_a"));
+            level = new Level();
         }
 
         public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch batch)
         {
            /*rawGameObject(batch, bg);
             DrawGameObject(batch, bug);*/
-            DrawGameObject(batch, bg);
+            level.Draw(batch, camera);
+
+            foreach (var item in level.Obstacles)
+            {
+                DrawGameObject(batch, item);
+            }
+
+           // DrawGameObject(batch, bg);
             DrawGameObject(batch, stone);
             DrawGameObject(batch, bug);
             DrawGameObject(batch, feature);
@@ -74,6 +83,12 @@ namespace DevAdventure
             bg.Update();
             bug.Update();
 
+
+            foreach (var item in level.Obstacles)
+            {
+                item.Update();
+            }
+
             floatingText.UpdateAll();
             LookAt(bug);
         }
@@ -82,22 +97,16 @@ namespace DevAdventure
         {
             world = new World(Vector2.Zero);
             GameObject.World = world;
-            // bug = new GameObject(new AnimatedSprite(ResMan.Get<Texture2D>("bug")), Vector2.Zero);
-         /*   bg = new GameObject(new AnimatedSprite(ResMan.Get<Texture2D>("checkboard")), Vector2.Zero);
 
-            bug = CreatePhysicsObject(new AnimatedSprite(ResMan.Get<Texture2D>("bug")), Vector2.Zero);
-            feature = CreatePhysicsObject(new AnimatedSprite(ResMan.Get<Texture2D>("bug")), new Vector2(400, 400));
-
-            bug.PhysicsBody.Mass = 5;
-            feature.PhysicsBody.Mass = 10;
-            */
             stone = GameObject.CreateCircular(new AnimatedSprite(ResMan.Get<Texture2D>("stone")), new Vector2(-0, -0), BodyType.Static, 180);
             bg = GameObject.CreateNonPhysics(new AnimatedSprite(ResMan.Get<Texture2D>("checkboard")), new Vector2(0, 0));
-            bug = GameObject.CreateRectangular(new AnimatedSprite(ResMan.Get<Texture2D>("bug2"),4,1,"walk"), new Vector2(500, 500), BodyType.Dynamic);
+            bug = GameObject.CreateCircular(new AnimatedSprite(ResMan.Get<Texture2D>("bug2"),4,1,"walk"), new Vector2(500, 500), BodyType.Dynamic);
             feature = GameObject.CreateRectangular(new AnimatedSprite(ResMan.Get<Texture2D>("bug2"),4,1, "walk"), new Vector2(-300, -300), BodyType.Dynamic);
 
+            level.LoadFromFile("asdf");
+
             floatingText = new FloatText(ResMan.GetResource<SpriteFont>("default"));
-          //  bug.PhysicsBody.OnCollision += new OnCollisionEventHandler(PhysicsBody_OnCollision);
+
         }
 
         bool PhysicsBody_OnCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
@@ -110,6 +119,11 @@ namespace DevAdventure
 
         public override void Activate(object obj)
         {
+            foreach (var res in level.GetRequiredResources())
+            {
+                requiredResources.Add(res);
+            }
+
             if (!HandleResources())
                 return;
         }

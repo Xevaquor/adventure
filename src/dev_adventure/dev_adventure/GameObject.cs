@@ -123,7 +123,7 @@ namespace DevAdventure
         /// <param name="pos"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        internal static GameObject CreateRectangular(AnimatedSprite sprite, Vector2 pos, BodyType type)
+        internal static GameObject CreateRectangular(AnimatedSprite sprite, Vector2 pos, BodyType type = BodyType.Static)
         {
             GameObject obj = new GameObject(sprite, pos);
             var q = new PolygonShape(1);
