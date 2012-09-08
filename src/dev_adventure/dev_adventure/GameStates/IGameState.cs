@@ -35,11 +35,11 @@ namespace DevAdventure
 
         public abstract void Activate(object obj = null);
 
-        protected bool HandleResources()
+        protected bool HandleResources(bool forceAssign = false)
         {
             if (HaveAllResources())
             {
-                if (dirtyResources)
+                if (dirtyResources || forceAssign)
                 {
                     AssignResources();
                     dirtyResources = false;

@@ -15,7 +15,7 @@ namespace DevAdventure
     /// <summary>
     /// Ne tak miało wyglądać moje życie ale .settings nie ma zamiaru działać a ja nie mam czasu zeby się z tym użerać :/
     /// </summary>
-    static class Settings
+    public static class Settings
     {
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -27,7 +27,7 @@ namespace DevAdventure
 
         private static void SetDefault()
         {
-            FramesPerSecond = 30;
+            FramesPerSecond = 60;
             Resolution = new Vector2(1024, 768);
             Fullscreen = false;
             logger.Warn("Invalid arguments given. Setting to default.", Resolution.X, Resolution.Y, Fullscreen);

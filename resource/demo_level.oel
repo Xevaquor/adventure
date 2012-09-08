@@ -1,0 +1,28 @@
+<level width="2560" height="2560" images="bg_a&#xD;&#xA;obstacle_1&#xD;&#xA;obstacle_2">
+  <DefaultLayer tileset="DefaultTileset" exportMode="CSV">2,2,2,2,2,2,2,2,2,2
+2,0,0,0,0,0,0,0,0,2
+2,0,0,1,2,2,2,1,0,2
+2,0,0,0,0,0,0,0,0,2
+2,0,1,2,2,1,0,0,0,2
+2,0,0,0,0,2,0,0,1,2
+2,0,0,0,0,2,0,0,0,2
+2,0,1,0,0,1,0,0,0,2
+2,0,0,0,0,0,0,0,0,2
+2,2,2,2,2,2,2,2,2,2</DefaultLayer>
+  <Obstacles>
+    <Stone id="0" x="480" y="672" />
+    <Stone id="1" x="912" y="496" />
+    <Stone id="2" x="1552" y="416" />
+    <Stone id="3" x="1840" y="1280" />
+    <Stone id="4" x="1056" y="1680" />
+    <Stone id="5" x="1888" y="2080" />
+    <Stone id="6" x="2176" y="1008" />
+    <Stone id="7" x="432" y="1616" />
+    <Stone id="8" x="368" y="2160" />
+    <Stone id="9" x="1040" y="2160" />
+    <Stone id="10" x="1584" y="912" />
+    <Stone id="11" x="784" y="1424" />
+    <Stone id="12" x="1888" y="1744" />
+	<ELSE id="2" x="45" y="4586" />
+  </Obstacles>
+</level>

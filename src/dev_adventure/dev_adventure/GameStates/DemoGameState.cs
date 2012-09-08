@@ -20,23 +20,18 @@ namespace DevAdventure
     class DemoGameState : IGameState
     {
         private GameObject bug;
-        private GameObject bg;
-        private GameObject feature;
-        private GameObject stone;
 
         private FloatText floatingText;
 
         World world = new World(Vector2.Zero);
+
+        IEnumerable<GameObject> Obstacles;
 
         Level level;
 
         public DemoGameState()
         {
             requiredResources.Add(new ResMan.Asset() { Name = "bug2", Type = ResMan.Asset.AssetType.TEXTURE_2D });
-            requiredResources.Add(new ResMan.Asset() { Name = "checkboard", Type = ResMan.Asset.AssetType.TEXTURE_2D });
-            requiredResources.Add(ResMan.NewTexture2D("stone"));
-            requiredResources.Add(ResMan.NewTexture2D("bg_a"));
-            level = new Level();
         }
 
         public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch batch)
@@ -45,18 +40,13 @@ namespace DevAdventure
             DrawGameObject(batch, bug);*/
             level.Draw(batch, camera);
 
-            foreach (var item in level.Obstacles)
+            foreach (var item in Obstacles)
             {
                 DrawGameObject(batch, item);
             }
 
            // DrawGameObject(batch, bg);
-            DrawGameObject(batch, stone);
             DrawGameObject(batch, bug);
-            DrawGameObject(batch, feature);
-            
-            batch.DrawString(ResMan.Get<SpriteFont>("default"), bug.Position.ToString(), Vector2.Zero, Color.Red);
-            batch.DrawString(ResMan.Get<SpriteFont>("default"), bug.PhysicsBody.Position.ToString(), new Vector2(0,100), Color.Red);
             
             floatingText.DrawAll(batch);
         }
@@ -64,27 +54,29 @@ namespace DevAdventure
         public override void Update()
         {
             if (InMan.KeyDown(Keys.Left))
-                bug.Rotate(-90);
+                bug.Rotate(-120);
             if (InMan.KeyDown(Keys.Right))
-                bug.Rotate(+90);
+                bug.Rotate(+120);
             if (InMan.KeyDown(Keys.Up))
-                bug.MoveStraight(+120);
+                bug.MoveStraight(+220);
             if (InMan.KeyDown(Keys.Down))
-                bug.MoveStraight(-120);
+                bug.MoveStraight(-220);
 
             if (InMan.LeftPressed)
             {
                 floatingText.Add("Q33NY", InMan.MousePosition, Color.Red);
             }
+            if (InMan.RightPressed)
+            {
+                RaiseStateChangeRequest("demo", "showcase2.oel");
+                return;
+            }
 
             world.Step(Settings.FrameTime);
-            feature.Update();
-            stone.Update();
-            bg.Update();
             bug.Update();
 
 
-            foreach (var item in level.Obstacles)
+            foreach (var item in Obstacles)
             {
                 item.Update();
             }
@@ -98,15 +90,13 @@ namespace DevAdventure
             world = new World(Vector2.Zero);
             GameObject.World = world;
 
-            stone = GameObject.CreateCircular(new AnimatedSprite(ResMan.Get<Texture2D>("stone")), new Vector2(-0, -0), BodyType.Static, 180);
-            bg = GameObject.CreateNonPhysics(new AnimatedSprite(ResMan.Get<Texture2D>("checkboard")), new Vector2(0, 0));
-            bug = GameObject.CreateCircular(new AnimatedSprite(ResMan.Get<Texture2D>("bug2"),4,1,"walk"), new Vector2(500, 500), BodyType.Dynamic);
-            feature = GameObject.CreateRectangular(new AnimatedSprite(ResMan.Get<Texture2D>("bug2"),4,1, "walk"), new Vector2(-300, -300), BodyType.Dynamic);
-
-            level.LoadFromFile("asdf");
-
+           bug = GameObject.CreateCircular(new AnimatedSprite(ResMan.Get<Texture2D>("bug2"),4,1,"walk"), new Vector2(500, 500), BodyType.Dynamic);
+           
             floatingText = new FloatText(ResMan.GetResource<SpriteFont>("default"));
 
+            //załozenie że są zasoby
+            level.AssignResources();
+            Obstacles = level.Obstacles;
         }
 
         bool PhysicsBody_OnCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
@@ -119,11 +109,15 @@ namespace DevAdventure
 
         public override void Activate(object obj)
         {
-            foreach (var res in level.GetRequiredResources())
+            if (obj != null)
             {
-                requiredResources.Add(res);
-            }
+                level = Level.LoadFromFile(obj as string);
 
+                foreach (var res in level.RequiredResources)
+                {
+                    requiredResources.Add(res);
+                }
+            }
             if (!HandleResources())
                 return;
         }

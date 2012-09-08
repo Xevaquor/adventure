@@ -5,16 +5,16 @@
   <BackgroundColor A="255" R="125" G="160" B="255" />
   <GridColor A="255" R="255" G="240" B="90" />
   <LevelDefaultSize>
-    <Width>640</Width>
-    <Height>480</Height>
+    <Width>2560</Width>
+    <Height>2560</Height>
   </LevelDefaultSize>
   <LevelMinimumSize>
-    <Width>640</Width>
-    <Height>480</Height>
+    <Width>256</Width>
+    <Height>256</Height>
   </LevelMinimumSize>
   <LevelMaximumSize>
-    <Width>640</Width>
-    <Height>480</Height>
+    <Width>99999</Width>
+    <Height>99999</Height>
   </LevelMaximumSize>
   <Filename>D:\Home\Xev\Projects\WSoC\resource\demo_map.oep</Filename>
   <AngleMode>Radians</AngleMode>
@@ -24,13 +24,16 @@
     <Height>480</Height>
   </CameraSize>
   <ExportCameraPosition>false</ExportCameraPosition>
-  <LevelValueDefinitions />
+  <LevelValueDefinitions>
+    <ValueDefinition xsi:type="StringValueDefinition" Name="backgrounds" Default="bg_a&#xD;&#xA;bg_b&#xD;&#xA;bg_c&#xD;&#xA;bg_d" MaxChars="-1" MultiLine="true" />
+    <ValueDefinition xsi:type="StringValueDefinition" Name="images" Default="obstacle_1&#xD;&#xA;obstacle_2&#xD;&#xA;obstacle_3&#xD;&#xA;obstacle_4&#xD;&#xA;obstacle_5&#xD;&#xA;obstacle_6&#xD;&#xA;stone&#xD;&#xA;fire" MaxChars="-1" MultiLine="true" />
+  </LevelValueDefinitions>
   <LayerDefinitions>
     <LayerDefinition xsi:type="TileLayerDefinition">
-      <Name>NewLayer0</Name>
+      <Name>DefaultLayer</Name>
       <Grid>
-        <Width>32</Width>
-        <Height>32</Height>
+        <Width>256</Width>
+        <Height>256</Height>
       </Grid>
       <ScrollFactor>
         <X>1</X>
@@ -38,14 +41,46 @@
       </ScrollFactor>
       <ExportMode>CSV</ExportMode>
     </LayerDefinition>
+    <LayerDefinition xsi:type="TileLayerDefinition">
+      <Name>Obstacles</Name>
+      <Grid>
+        <Width>256</Width>
+        <Height>256</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+      <ExportMode>XMLCoords</ExportMode>
+    </LayerDefinition>
+    <LayerDefinition xsi:type="EntityLayerDefinition">
+      <Name>Entities</Name>
+      <Grid>
+        <Width>16</Width>
+        <Height>16</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+    </LayerDefinition>
   </LayerDefinitions>
   <Tilesets>
     <Tileset>
-      <Name>NewTileset0</Name>
-      <FilePath>..\media\tilemap.png</FilePath>
+      <Name>DemoTileset</Name>
+      <FilePath>..\media\demo_level\bg_editor.png</FilePath>
       <TileSize>
-        <Width>32</Width>
-        <Height>32</Height>
+        <Width>256</Width>
+        <Height>256</Height>
+      </TileSize>
+      <TileSep>0</TileSep>
+    </Tileset>
+    <Tileset>
+      <Name>ObstacleTileset</Name>
+      <FilePath>..\media\demo_level\obstacles_editor.png</FilePath>
+      <TileSize>
+        <Width>256</Width>
+        <Height>256</Height>
       </TileSize>
       <TileSep>0</TileSep>
     </Tileset>
@@ -53,19 +88,32 @@
   <EntityDefinitions>
     <EntityDefinition Name="Stone" Limit="-1" ResizableX="false" ResizableY="false" Rotatable="false" RotateIncrement="15">
       <Size>
-        <Width>16</Width>
-        <Height>16</Height>
+        <Width>100</Width>
+        <Height>100</Height>
       </Size>
       <Origin>
-        <X>0</X>
-        <Y>0</Y>
+        <X>50</X>
+        <Y>50</Y>
       </Origin>
-      <ImageDefinition DrawMode="Rectangle" ImagePath="" Tiled="false">
+      <ImageDefinition DrawMode="Image" ImagePath="..\media\stone.png" Tiled="false">
         <RectColor A="255" R="255" G="0" B="0" />
       </ImageDefinition>
-      <ValueDefinitions>
-        <ValueDefinition xsi:type="IntValueDefinition" Name="NewValue0" Default="0" Min="0" Max="100" ShowSlider="false" />
-      </ValueDefinitions>
+      <ValueDefinitions />
+      <NodesDefinition Enabled="false" Limit="-1" DrawMode="None" Ghost="false" />
+    </EntityDefinition>
+    <EntityDefinition Name="Fire" Limit="-1" ResizableX="false" ResizableY="false" Rotatable="false" RotateIncrement="15">
+      <Size>
+        <Width>128</Width>
+        <Height>128</Height>
+      </Size>
+      <Origin>
+        <X>64</X>
+        <Y>64</Y>
+      </Origin>
+      <ImageDefinition DrawMode="Image" ImagePath="..\media\demo_level\fire_editor.png" Tiled="false">
+        <RectColor A="255" R="255" G="0" B="0" />
+      </ImageDefinition>
+      <ValueDefinitions />
       <NodesDefinition Enabled="false" Limit="-1" DrawMode="None" Ghost="false" />
     </EntityDefinition>
   </EntityDefinitions>

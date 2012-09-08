@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C# Express 2010
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dev_adventure", "dev_adventure\dev_adventure\dev_adventure.csproj", "{CDDB4DC5-8EC1-4D52-B3AA-58ADBBCA2781}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "dev_adventureContent", "dev_adventure\dev_adventureContent\dev_adventureContent.contentproj", "{FD6FCE18-53C9-490E-BD1B-92032C84991B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dev_adventureContent", "dev_adventure\dev_adventureContent\dev_adventureContent.contentproj", "{FD6FCE18-53C9-490E-BD1B-92032C84991B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

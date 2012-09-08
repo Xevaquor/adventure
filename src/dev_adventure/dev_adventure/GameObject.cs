@@ -16,7 +16,7 @@ using FarseerPhysics.SamplesFramework;
 
 namespace DevAdventure
 {
-    class GameObject
+    public class GameObject
     {
         /// <summary>
         /// Position in game units. Autoassign physics units.
@@ -49,7 +49,7 @@ namespace DevAdventure
         public Body PhysicsBody;
         public Fixture PhysicsFixture;
 
-        internal static World World;
+        public static World World;
 
         public GameObject(AnimatedSprite animated_sprite, Vector2 pos, float rot, Vector2 ori, Vector2 vel)
         {
@@ -102,15 +102,20 @@ namespace DevAdventure
         /// <param name="pos">Postion</param>
         /// <param name="angle">Angle in radians</param>
         /// <returns></returns>
-        internal static GameObject CreateCircular(AnimatedSprite sprite, Vector2 pos, BodyType type = BodyType.Static, float angle = 0f)
+        public static GameObject CreateCircular(AnimatedSprite sprite, Vector2 pos, BodyType type = BodyType.Static, float angle = 0f)
         {
             GameObject obj = new GameObject(sprite, pos, angle);
             obj.PhysicsBody.CreateFixture(new CircleShape(ConvertUnits.ToSimUnits(obj.Size.X / 2), 0));
             obj.PhysicsBody.BodyType = type;
             return obj;
         }
-
-        internal static GameObject CreateNonPhysics(AnimatedSprite sprite, Vector2 pos, float angle = 0f)
+        public static GameObject CreateStone(Vector2 pos)
+        {
+            AnimatedSprite sprite = new AnimatedSprite(ResMan.Get<Texture2D>("stone"));
+            GameObject obj = CreateCircular(sprite, pos);
+            return obj;
+        }
+        public static GameObject CreateNonPhysics(AnimatedSprite sprite, Vector2 pos, float angle = 0f)
         {
             GameObject obj = new GameObject(sprite, pos, angle);
             //obj.PhysicsBody.IsSensor = true;
@@ -123,7 +128,7 @@ namespace DevAdventure
         /// <param name="pos"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        internal static GameObject CreateRectangular(AnimatedSprite sprite, Vector2 pos, BodyType type = BodyType.Static)
+        public static GameObject CreateRectangular(AnimatedSprite sprite, Vector2 pos, BodyType type = BodyType.Static)
         {
             GameObject obj = new GameObject(sprite, pos);
             var q = new PolygonShape(1);
@@ -135,5 +140,11 @@ namespace DevAdventure
             return obj;
         }
 
+
+        public static GameObject CreateFire(Vector2 obstacle)
+        {
+            AnimatedSprite sprite = new AnimatedSprite(ResMan.Get<Texture2D>("fire"), 8, 0.5f, "burning");
+            return GameObject.CreateCircular(sprite, obstacle);
+        }
     }
 }

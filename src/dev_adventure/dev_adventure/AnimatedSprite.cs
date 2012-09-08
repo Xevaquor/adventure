@@ -16,7 +16,7 @@ namespace DevAdventure
     /// <summary>
     /// Animated sprite - generates part of image wchich contains frame animation.
     /// </summary>
-    class AnimatedSprite
+    public class AnimatedSprite
     {
         private Dictionary<string, int> animations = new Dictionary<string, int>();
         private int currentAnim;
@@ -25,6 +25,8 @@ namespace DevAdventure
 
         private readonly int framesInAnim;
         private readonly int animTime;
+
+        private static Random rnd = new Random();
 
         Texture2D img;
         private Vector2 frameSize = Vector2.Zero;
@@ -46,7 +48,7 @@ namespace DevAdventure
         /// <param name="frames_in_anim">Frames in single animation</param>
         /// <param name="anim_time">Time for full animation pass in seconds</param>
         /// <param name="names">Names for each animation eg. walk, shoot, etc.</param>
-        public AnimatedSprite(Texture2D tex, int frames_in_anim, int anim_time, params string[] names)
+        public AnimatedSprite(Texture2D tex, int frames_in_anim, float anim_time, params string[] names)
         {
             Debug.Assert(names.Length > 0);
             Debug.Assert(frames_in_anim > 0);
@@ -62,8 +64,10 @@ namespace DevAdventure
             frameSize.X = tex.Width / cols;
             frameSize.Y = tex.Height / rows;
 
-            framesInAnim = anim_time * Settings.FramesPerSecond / frames_in_anim;
+            framesInAnim = (int) (anim_time * Settings.FramesPerSecond / frames_in_anim);
             animTime = frames_in_anim;
+            frames = rnd.Next(0, framesInAnim);
+            currentFrame = rnd.Next(0, animTime);
 
             clipRectangle = new Rectangle(
                 (int)(currentFrame * frameSize.X),

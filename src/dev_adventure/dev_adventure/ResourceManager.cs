@@ -13,12 +13,12 @@ using System.Diagnostics;
 
 namespace DevAdventure
 {
-    static class ResMan
+    public static class ResMan
     {
         public struct Asset
         {
             public string Name;
-            public enum AssetType { SPRITE_FONT, TEXTURE_2D };
+            public enum AssetType { SPRITE_FONT, TEXTURE_2D, LEVEL };
             public AssetType Type;
         }
 

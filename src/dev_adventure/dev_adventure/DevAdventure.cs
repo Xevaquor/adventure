@@ -98,15 +98,31 @@ namespace DevAdventure
 
             currentState = "demo";
 
-            gameStates[currentState].Activate();
+            gameStates[currentState].Activate("showcase.oel");
         }
 
 
         void Value_RequestingStateChange(string name, object obj)
         {
+            
             if (name == null)
             {
                 currentState = previousState;
+            }
+            else if (name == currentState)
+            {
+                //stan gry chce siê prze³adowaæ, np nastepny poziom
+                switch (name)
+                {
+                    case "demo":
+                        gameStates["demo"] = new DemoGameState();
+                        gameStates["demo"].RequestingStateChange += Value_RequestingStateChange;
+                        gameStates["demo"].RequestingResources += Value_RequestingResources;
+                        break;
+                    default:
+                        logger.Error("Unknown game state wants to reload itself: " + name);
+                        break;
+                }
             }
             else
             {
@@ -150,6 +166,7 @@ namespace DevAdventure
                         default:
                             logger.Error("Unknown resource type: {0}. Resource name: {1}", item.Type, item.Name);
                             break;
+                            //TODO: case na ³adowanie levelu
                     }
 
                 }

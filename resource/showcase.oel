@@ -1,0 +1,77 @@
+<level width="2560" height="2560" backgrounds="bg_a&#xD;&#xA;bg_b&#xD;&#xA;bg_c&#xD;&#xA;bg_d" images="obstacle_1&#xD;&#xA;obstacle_2&#xD;&#xA;obstacle_3&#xD;&#xA;obstacle_4&#xD;&#xA;obstacle_5&#xD;&#xA;obstacle_6&#xD;&#xA;stone&#xD;&#xA;fire">
+  <DefaultLayer tileset="DemoTileset" exportMode="CSV">0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0</DefaultLayer>
+  <Obstacles tileset="ObstacleTileset" exportMode="XMLCoords">
+    <tile x="0" y="0" tx="1" ty="0" />
+    <tile x="0" y="1" tx="1" ty="0" />
+    <tile x="0" y="2" tx="1" ty="0" />
+    <tile x="0" y="3" tx="1" ty="0" />
+    <tile x="0" y="4" tx="1" ty="0" />
+    <tile x="0" y="5" tx="1" ty="0" />
+    <tile x="0" y="6" tx="1" ty="0" />
+    <tile x="0" y="7" tx="1" ty="0" />
+    <tile x="0" y="8" tx="1" ty="0" />
+    <tile x="0" y="9" tx="1" ty="0" />
+    <tile x="1" y="0" tx="1" ty="0" />
+    <tile x="1" y="6" tx="2" ty="0" />
+    <tile x="1" y="9" tx="1" ty="0" />
+    <tile x="2" y="0" tx="1" ty="0" />
+    <tile x="2" y="6" tx="2" ty="0" />
+    <tile x="2" y="9" tx="1" ty="0" />
+    <tile x="3" y="0" tx="1" ty="0" />
+    <tile x="3" y="3" tx="0" ty="0" />
+    <tile x="3" y="6" tx="0" ty="0" />
+    <tile x="3" y="9" tx="1" ty="0" />
+    <tile x="4" y="0" tx="1" ty="0" />
+    <tile x="4" y="1" tx="1" ty="0" />
+    <tile x="4" y="3" tx="5" ty="0" />
+    <tile x="4" y="6" tx="3" ty="0" />
+    <tile x="4" y="9" tx="1" ty="0" />
+    <tile x="5" y="0" tx="1" ty="0" />
+    <tile x="5" y="3" tx="5" ty="0" />
+    <tile x="5" y="6" tx="3" ty="0" />
+    <tile x="5" y="9" tx="1" ty="0" />
+    <tile x="6" y="0" tx="1" ty="0" />
+    <tile x="6" y="3" tx="0" ty="0" />
+    <tile x="6" y="4" tx="2" ty="0" />
+    <tile x="6" y="5" tx="2" ty="0" />
+    <tile x="6" y="6" tx="0" ty="0" />
+    <tile x="6" y="9" tx="1" ty="0" />
+    <tile x="7" y="0" tx="1" ty="0" />
+    <tile x="7" y="9" tx="1" ty="0" />
+    <tile x="8" y="0" tx="1" ty="0" />
+    <tile x="8" y="9" tx="1" ty="0" />
+    <tile x="9" y="0" tx="1" ty="0" />
+    <tile x="9" y="1" tx="1" ty="0" />
+    <tile x="9" y="2" tx="1" ty="0" />
+    <tile x="9" y="3" tx="1" ty="0" />
+    <tile x="9" y="4" tx="1" ty="0" />
+    <tile x="9" y="5" tx="1" ty="0" />
+    <tile x="9" y="6" tx="1" ty="0" />
+    <tile x="9" y="7" tx="1" ty="0" />
+    <tile x="9" y="8" tx="1" ty="0" />
+    <tile x="9" y="9" tx="1" ty="0" />
+  </Obstacles>
+  <Entities>
+    <Fire id="0" x="1424" y="1120" />
+    <Fire id="1" x="1424" y="1440" />
+    <Fire id="2" x="416" y="1456" />
+    <Fire id="3" x="1440" y="400" />
+    <Fire id="4" x="832" y="384" />
+    <Stone id="5" x="1488" y="672" />
+    <Stone id="6" x="736" y="1072" />
+    <Stone id="7" x="1952" y="2016" />
+    <Stone id="8" x="656" y="2080" />
+    <Stone id="9" x="2064" y="528" />
+    <Stone id="10" x="2000" y="1168" />
+    <Stone id="11" x="1312" y="2128" />
+  </Entities>
+</level>

@@ -1,0 +1,33 @@
+<level width="2560" height="2560" images="bg_a&#xD;&#xA;obstacle_1&#xD;&#xA;obstacle_2">
+  <DefaultLayer tileset="DefaultTileset" exportMode="CSV">1,1,1,1,1,1,1,1,1,1
+1,1,1,1,1,1,1,1,1,1
+1,1,1,1,1,1,1,1,1,1
+1,1,1,1,1,1,1,1,1,1
+1,1,1,1,1,1,1,1,1,1
+1,1,1,1,1,1,1,1,1,1
+1,1,1,1,1,1,1,1,1,1
+1,1,1,1,1,1,1,1,1,1
+1,1,1,1,1,1,1,1,1,1
+1,1,1,1,1,1,1,1,1,1</DefaultLayer>
+  <Obstacles>
+    <Stone id="0" x="816" y="352" />
+    <Stone id="1" x="848" y="512" />
+    <Stone id="2" x="816" y="624" />
+    <Stone id="3" x="816" y="800" />
+    <Stone id="4" x="816" y="1040" />
+    <Stone id="5" x="992" y="1104" />
+    <Stone id="6" x="1120" y="1152" />
+    <Stone id="7" x="1232" y="1136" />
+    <Stone id="8" x="1312" y="1072" />
+    <Stone id="9" x="1344" y="976" />
+    <Stone id="10" x="1200" y="848" />
+    <Stone id="11" x="1136" y="784" />
+    <Stone id="12" x="1104" y="672" />
+    <Stone id="13" x="1152" y="544" />
+    <Stone id="14" x="1200" y="480" />
+    <Stone id="15" x="1168" y="368" />
+    <Stone id="16" x="1088" y="304" />
+    <Stone id="17" x="1040" y="256" />
+    <Stone id="18" x="864" y="192" />
+  </Obstacles>
+</level>
