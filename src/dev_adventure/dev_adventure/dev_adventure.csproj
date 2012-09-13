@@ -14,7 +14,7 @@
     </TargetFrameworkProfile>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
-    <XnaProfile>HiDef</XnaProfile>
+    <XnaProfile>Reach</XnaProfile>
     <XnaCrossPlatformGroupID>62e08757-2f46-4d04-9f99-3ca5a064f500</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Game.ico</ApplicationIcon>
@@ -118,6 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnimatedSprite.cs" />
+    <Compile Include="Enemy.cs" />
     <Compile Include="ExternalCode\ConvertUnits.cs" />
     <Compile Include="FloatText.cs" />
     <Compile Include="GameObject.cs" />

@@ -27,6 +27,8 @@ namespace DevAdventure
 
         IEnumerable<GameObject> Obstacles;
 
+        List<Enemy> enemies = new List<Enemy>();
+
         Level level;
 
         public DemoGameState()
@@ -45,10 +47,18 @@ namespace DevAdventure
                 DrawGameObject(batch, item);
             }
 
+            foreach (var item in enemies)
+            {
+                DrawGameObject(batch, item);
+            }
+
            // DrawGameObject(batch, bg);
             DrawGameObject(batch, bug);
             
             floatingText.DrawAll(batch);
+
+            batch.DrawString(ResMan.Get<SpriteFont>("default"), bug.Position + "|" +
+                ConvertUnits.ToDisplayUnits(bug.PhysicsBody.Position), Vector2.Zero, Color.Red);
         }
 
         public override void Update()
@@ -64,7 +74,9 @@ namespace DevAdventure
 
             if (InMan.LeftPressed)
             {
-                floatingText.Add("Q33NY", InMan.MousePosition, Color.Red);
+                var enemy = Enemy.CreateBug(InMan.MousePosition + camera);
+                enemy.PhysicsBody.OnCollision += new OnCollisionEventHandler(PhysicsBody_OnCollision);
+                enemies.Add(enemy);
             }
             if (InMan.RightPressed)
             {
@@ -80,9 +92,18 @@ namespace DevAdventure
             {
                 item.Update();
             }
+            foreach (var item in enemies)
+            {
+                item.Update();
+            }
 
             floatingText.UpdateAll();
             LookAt(bug);
+        }
+
+        bool PhysicsBody_OnCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
+        {
+            //contact.
         }
 
         protected override void AssignResources()
@@ -90,7 +111,7 @@ namespace DevAdventure
             world = new World(Vector2.Zero);
             GameObject.World = world;
 
-           bug = GameObject.CreateCircular(new AnimatedSprite(ResMan.Get<Texture2D>("bug2"),4,1,"walk"), new Vector2(500, 500), BodyType.Dynamic);
+            bug = GameObject.CreateCircular(new AnimatedSprite(ResMan.Get<Texture2D>("bug2"),4,1,"walk"), new Vector2(500, 500), BodyType.Dynamic);
            
             floatingText = new FloatText(ResMan.GetResource<SpriteFont>("default"));
 
@@ -99,13 +120,6 @@ namespace DevAdventure
             Obstacles = level.Obstacles;
         }
 
-        bool PhysicsBody_OnCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
-        {
-            /* System.Windows.Forms.MessageBox.Show(feature.Position.ToString() + " " + bug.Position.ToString());
-             System.Windows.Forms.MessageBox.Show(feature.PhysicsBody.Position.ToString() + " " + bug.PhysicsBody.Position.ToString());
-             */
-            return true;
-        }
 
         public override void Activate(object obj)
         {
@@ -117,6 +131,7 @@ namespace DevAdventure
                 {
                     requiredResources.Add(res);
                 }
+                requiredResources.Add(ResMan.NewTexture2D("bug"));
             }
             if (!HandleResources())
                 return;

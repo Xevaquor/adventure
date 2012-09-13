@@ -69,7 +69,7 @@ namespace DevAdventure
         /// <summary>
         /// Call AFTER physics step
         /// </summary>
-        public void Update()
+        public virtual void Update()
         {
             Sprite.Update();
             PhysicsBody.LinearVelocity = Vector2.Zero;
