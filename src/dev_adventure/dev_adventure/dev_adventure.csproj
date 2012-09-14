@@ -118,7 +118,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnimatedSprite.cs" />
-    <Compile Include="Enemy.cs" />
+    <Compile Include="Bullet.cs" />
+    <Compile Include="Character.cs" />
     <Compile Include="ExternalCode\ConvertUnits.cs" />
     <Compile Include="FloatText.cs" />
     <Compile Include="GameObject.cs" />

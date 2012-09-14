@@ -27,9 +27,10 @@ namespace DevAdventure
 
         IEnumerable<GameObject> Obstacles;
 
-        List<Enemy> enemies = new List<Enemy>();
+        List<Character> enemies = new List<Character>();
 
         Level level;
+        public Character Player;
 
         public DemoGameState()
         {
@@ -47,35 +48,39 @@ namespace DevAdventure
                 DrawGameObject(batch, item);
             }
 
+            enemies.RemoveAll((e) => !e.Alive);
+
             foreach (var item in enemies)
+            {
+                DrawGameObject(batch, item);
+                foreach (var inner in item.Bullets)
+                {
+                    DrawGameObject(batch, inner);
+                }
+            }
+            foreach (var item in Player.Bullets)
             {
                 DrawGameObject(batch, item);
             }
 
            // DrawGameObject(batch, bg);
             DrawGameObject(batch, bug);
+            DrawGameObject(batch, Player);
             
             floatingText.DrawAll(batch);
 
-            batch.DrawString(ResMan.Get<SpriteFont>("default"), bug.Position + "|" +
-                ConvertUnits.ToDisplayUnits(bug.PhysicsBody.Position), Vector2.Zero, Color.Red);
+            batch.DrawString(ResMan.Get<SpriteFont>("default"), Player.Health.ToString(), Vector2.Zero, Color.Red);
         }
 
         public override void Update()
         {
-            if (InMan.KeyDown(Keys.Left))
-                bug.Rotate(-120);
-            if (InMan.KeyDown(Keys.Right))
-                bug.Rotate(+120);
-            if (InMan.KeyDown(Keys.Up))
-                bug.MoveStraight(+220);
-            if (InMan.KeyDown(Keys.Down))
-                bug.MoveStraight(-220);
+            
 
             if (InMan.LeftPressed)
             {
-                var enemy = Enemy.CreateBug(InMan.MousePosition + camera);
+                var enemy = Character.CreateBug(InMan.MousePosition + camera);
                 enemy.PhysicsBody.OnCollision += new OnCollisionEventHandler(PhysicsBody_OnCollision);
+                enemy.PhysicsBody.OnSeparation += new OnSeparationEventHandler(PhysicsBody_OnSeparation);
                 enemies.Add(enemy);
             }
             if (InMan.RightPressed)
@@ -96,15 +101,45 @@ namespace DevAdventure
             {
                 item.Update();
             }
+            Player.Update();
+
+            if (!Player.Alive)
+            {
+                System.Windows.Forms.MessageBox.Show("LOOSER");
+                RaiseStateChangeRequest("demo", level.Filename);
+            }
 
             floatingText.UpdateAll();
-            LookAt(bug);
+            LookAt(Player);
+        }
+
+        void PhysicsBody_OnSeparation(Fixture fixtureA, Fixture fixtureB)
+        {
+            Character player = fixtureB.Body.UserData as Character;
+            Character bug = fixtureA.Body.UserData as Character;
+            if (player != null && bug != null)
+            {
+                if (bug.Relations != player.Relations)
+                {
+                    player.TakingTouchDamage -= 1;
+                }
+            }
         }
 
         bool PhysicsBody_OnCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
-            //contact.
+            Character player = fixtureB.Body.UserData as Character;
+            Character bug = fixtureA.Body.UserData as Character;
+            if (player != null && bug != null)
+            {
+                if (bug.Relations != player.Relations)
+                {
+                    player.TakingTouchDamage += 1;
+                }
+            }
+            return true;
         }
+
 
         protected override void AssignResources()
         {
@@ -112,6 +147,7 @@ namespace DevAdventure
             GameObject.World = world;
 
             bug = GameObject.CreateCircular(new AnimatedSprite(ResMan.Get<Texture2D>("bug2"),4,1,"walk"), new Vector2(500, 500), BodyType.Dynamic);
+            Player = Character.CreatePlayer(new Vector2(500, 500));
            
             floatingText = new FloatText(ResMan.GetResource<SpriteFont>("default"));
 
@@ -132,6 +168,7 @@ namespace DevAdventure
                     requiredResources.Add(res);
                 }
                 requiredResources.Add(ResMan.NewTexture2D("bug"));
+                requiredResources.Add(ResMan.NewTexture2D("bullet"));
             }
             if (!HandleResources())
                 return;

@@ -87,9 +87,12 @@ namespace DevAdventure
         {
             Debug.Assert(animations.ContainsKey(name));
 
-            currentAnim = animations[name];
-            frames = 0;
-            currentFrame = 0;
+            if (animations[name] != currentAnim)
+            {
+                currentAnim = animations[name];
+                frames = 0;
+                currentFrame = 0;
+            }
         }
         /// <summary>
         /// Updates animation if required. Has to be called once a frame.

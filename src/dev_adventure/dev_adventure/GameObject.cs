@@ -18,6 +18,8 @@ namespace DevAdventure
 {
     public class GameObject
     {
+        public enum Relationship { Friendly, Enemy };
+
         /// <summary>
         /// Position in game units. Autoassign physics units.
         /// </summary>
@@ -42,12 +44,16 @@ namespace DevAdventure
        // public Vector2 Velocity;
         public Vector2 Origin;
 
+        public Relationship Relations { get; set; }
+
         public Vector2 Size { get { return new Vector2(Sprite.Area.Width, Sprite.Area.Height); } }
 
         public AnimatedSprite Sprite;
 
         public Body PhysicsBody;
         public Fixture PhysicsFixture;
+
+        public bool Alive { get; set; }
 
         public static World World;
 
@@ -59,6 +65,7 @@ namespace DevAdventure
             Rotation = rot;
             PhysicsBody.Rotation = Rotation;
             Origin = ori;
+            Alive = true;
         }
         public GameObject(AnimatedSprite animated_sprite, Vector2 pos, float rot = 0.0f)
             : this(animated_sprite, pos, rot, Vector2.Zero, Vector2.Zero)
@@ -74,6 +81,7 @@ namespace DevAdventure
             Sprite.Update();
             PhysicsBody.LinearVelocity = Vector2.Zero;
             PhysicsBody.AngularVelocity = 0;
+
         }
         /// <summary>
         /// 
@@ -95,6 +103,11 @@ namespace DevAdventure
            // PhysicsBody.LinearVelocity = new Vector2(0, 1);
         }
 
+        public Vector2 GetDirectionalVector(float len)
+        {
+            return new Vector2((float)(len * Math.Sin(Rotation)), (float)(-len * Math.Cos(Rotation)));
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -107,6 +120,8 @@ namespace DevAdventure
             GameObject obj = new GameObject(sprite, pos, angle);
             obj.PhysicsBody.CreateFixture(new CircleShape(ConvertUnits.ToSimUnits(obj.Size.X / 2), 0));
             obj.PhysicsBody.BodyType = type;
+            obj.PhysicsBody.CollisionCategories = (Category)0x1;
+            //obj.PhysicsBody.CollisionCategories
             return obj;
         }
         public static GameObject CreateStone(Vector2 pos)
@@ -115,6 +130,13 @@ namespace DevAdventure
             GameObject obj = CreateCircular(sprite, pos);
             return obj;
         }
+
+        public virtual void Kill()
+        {
+            World.RemoveBody(this.PhysicsBody);
+            Alive = false;
+        }
+
         public static GameObject CreateNonPhysics(AnimatedSprite sprite, Vector2 pos, float angle = 0f)
         {
             GameObject obj = new GameObject(sprite, pos, angle);

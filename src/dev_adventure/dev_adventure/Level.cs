@@ -136,7 +136,7 @@ namespace DevAdventure
 
             lvl.dirtyObstacles["Fire"] = fires.ToList();
 
-
+            lvl.Filename = filename;
             return lvl;
         }
 
@@ -170,5 +170,7 @@ namespace DevAdventure
                 Obstacles.Add(GameObject.CreateFire(obstacle));
             }
         }
+
+        public object Filename { get; set; }
     }
 }

@@ -218,7 +218,7 @@ namespace DevAdventure
             {
                 GraphicsDevice.Viewport = gameViewport;
             }
-            catch
+            catch (ArgumentException)
             {
                 ;//I really don't know waht's going on. It crashes when unminimizing
             }
